@@ -76,11 +76,6 @@ onMounted(() => {
             </h2>
           </div>
         </div>
-        <div class="generate__top-right">
-          <div class="generate__timestamp">
-            {{ now }}
-          </div>
-        </div>
       </div>
       <div class="generate__body">
         <div class="generate__body-left">
@@ -202,7 +197,7 @@ onMounted(() => {
 <style scoped lang="scss">
 .generate {
   width: 100%;
-  height: 100%;
+  height: 463px;
   display: flex;
   background: #efefef;
 
@@ -317,11 +312,6 @@ onMounted(() => {
     color: #6b7280;
   }
 
-  &__metric-value {
-    font-size: 28px;
-    font-weight: 800;
-  }
-
   /* 指标区域采用网格布局，控制列间距和垂直间距 */
   &__metric-rows {
     display: grid;
@@ -357,8 +347,27 @@ onMounted(() => {
     min-height: 86px;
   }
 
+  &__metric-value {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+  }
+
+  &__metric-number {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  &__metric-unit {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
   &__metric-sub {
     color: #6b7280;
+    font-size: 16px;
   }
 
   &__metric-status {
@@ -366,6 +375,11 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+
+  &__safe-days {
+    font-size: 36px;
+    font-weight: 700;
   }
 }
 </style>

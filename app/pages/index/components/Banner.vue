@@ -74,7 +74,7 @@ defineExpose({
 
 .index-banner {
   width: 100%;
-  height: 100%;
+  height: 490px;
   overflow: hidden;
 
   .index-banner__swiper {

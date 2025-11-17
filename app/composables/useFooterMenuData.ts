@@ -69,7 +69,7 @@ export default function () {
       },
       {
         title: "企业文化",
-        route: "/qywh/main",
+        route: "/qywh/index",
         child: [
           {
             title: "集团公司",

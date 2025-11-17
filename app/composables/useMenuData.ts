@@ -56,19 +56,19 @@ export default function () {
       },
       {
         title: "企业文化",
-        route: "/qywh/main",
+        route: "/qywh/index",
         child: [
           {
             title: "集团公司",
-            route: "/qywh/jtgs",
+            route: "/qywh/index",
           },
           {
             title: "四川公司",
-            route: "/qywh/scgs",
+            route: "/qywh/index",
           },
           {
             title: "泸定公司",
-            route: "/qywh/ldgs",
+            route: "/qywh/index",
           },
         ],
       },

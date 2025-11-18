@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { articlePageListByAlias } from '~/api/index'
+import { developmentHistory } from '~/api/index'
 import historyBg from '~/assets/images/history-bg.webp'
 import image from '~/assets/images/swiper/swiper-2.jpg'
 
@@ -86,7 +86,7 @@ async function fetchHistoryData() {
   try {
     isLoading.value = true
     // 调用 articlePageListByAlias 接口获取发展历程数据
-    const response = await articlePageListByAlias({
+    const response = await developmentHistory({
       alias: 'fazhanlicheng',
     })
     allData.value = normalizeHistoryData(response)

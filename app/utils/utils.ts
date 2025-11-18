@@ -7,7 +7,8 @@
 let timeout: NodeJS.Timeout | null = null
 export function debounce(func: (...args: any[]) => void, wait: number = 500, immediate: boolean = false): void {
   // 清除定时器
-  if (timeout !== null) clearTimeout(timeout)
+  if (timeout !== null)
+    clearTimeout(timeout)
   // 立即执行，此类情况一般用不到
   if (immediate) {
     const callNow = !timeout
@@ -15,14 +16,15 @@ export function debounce(func: (...args: any[]) => void, wait: number = 500, imm
       timeout = null
     }, wait)
     if (callNow) {
-      if (typeof func === "function") {
+      if (typeof func === 'function') {
         func()
       }
     }
-  } else {
+  }
+  else {
     // 设置定时器，当最后一次操作后，timeout不会再被清除，所以在延时wait毫秒后执行func回调方法
     timeout = setTimeout(() => {
-      if (typeof func === "function") {
+      if (typeof func === 'function') {
         func()
         timeout = null
       }
@@ -43,20 +45,21 @@ export function throttling(func: (...args: any[]) => void, wait: number = 500, i
     if (!flag) {
       flag = true
       // 如果是立即执行，则在wait毫秒内开始时执行
-      if (typeof func === "function") {
+      if (typeof func === 'function') {
         func()
       }
       _timer = setTimeout(() => {
         flag = false
       }, wait)
     }
-  } else {
+  }
+  else {
     if (!flag) {
       flag = true
       // 如果是非立即执行，则在wait毫秒内的结束处执行
       _timer = setTimeout(() => {
         flag = false
-        if (typeof func === "function") {
+        if (typeof func === 'function') {
           func()
         }
       }, wait)
@@ -72,26 +75,5 @@ export function throttling(func: (...args: any[]) => void, wait: number = 500, i
  * @returns 完整的资源URL
  */
 export function buildFullUrl(url: string): string {
-  if (!url) {
-    return ""
-  }
-
-  // 如果已经是完整的URL（以http/https开头），转换为相对路径
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-    // 提取路径部分
-    try {
-      const urlObj = new URL(url)
-      return urlObj.pathname + urlObj.search
-    } catch {
-      return url
-    }
-  }
-
-  // 如果已经是相对路径（以/开头），直接返回
-  // if (url.startsWith("/")) {
-  //   return "http://192.168.10.40:9055" + url
-  // }
-
-  // 其他情况，假设是uploads路径
-  return `/${url}`
+  return url
 }

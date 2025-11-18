@@ -1,49 +1,38 @@
-<template>
-  <div class="index-topic-wrapper">
-    <div class="index-topic">
-      <div class="index-topic__top">
-        <div class="index-topic__top--left">
-          <div class="index-topic__title-section">
-            <p class="index-topic__title-en">In Focus</p>
-            <h2 class="index-topic__title-cn">专题聚焦</h2>
-          </div>
-        </div>
-        <div class="index-topic__top--right"></div>
-      </div>
-      <div class="index-topic__bottom">
-        <div v-for="item in topicList" :key="item.id" class="index-topic__entry-item">
-          <img :src="item.image" :alt="item.name || 'topic-item'" />
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref, onMounted } from "vue"
-import { blockItem } from "~/api"
-import { buildFullUrl } from "~/utils/utils"
+import { Autoplay } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { computed, onMounted, ref } from 'vue'
+import { blockItem } from '~/api'
+import { buildFullUrl } from '~/utils/utils'
+import 'swiper/css'
 
 const topicList = ref<any[]>([])
 const isLoading = ref(false)
+const slidesPerView = computed(() => {
+  const len = topicList.value.length
+  return Math.min(4, Math.max(1, len))
+})
+const modules = computed(() => (topicList.value.length > 4 ? [Autoplay] : []))
 
 /**
  * 获取专题聚焦数据
  */
-const fetchTopicData = async () => {
+async function fetchTopicData() {
   isLoading.value = true
 
   try {
-    const response = await blockItem({ block: "zhuantijujiao" })
+    const response = await blockItem({ block: 'zhuantijujiao' })
     // 处理返回的数据，拼接图片完整URL
     topicList.value = (response || []).map((item: any) => ({
       ...item,
       image: buildFullUrl(item.image),
     }))
-  } catch (error) {
-    console.error("Failed to fetch topic data:", error)
+  }
+  catch (error) {
+    console.error('Failed to fetch topic data:', error)
     topicList.value = []
-  } finally {
+  }
+  finally {
     isLoading.value = false
   }
 }
@@ -53,12 +42,50 @@ onMounted(() => {
 })
 </script>
 
+<template>
+  <div class="index-topic-wrapper">
+    <div class="index-topic">
+      <div class="index-topic__top">
+        <div class="index-topic__top--left">
+          <div class="index-topic__title-section">
+            <p class="index-topic__title-en">
+              Special Focus
+            </p>
+            <h2 class="index-topic__title-cn">
+              专题聚焦
+            </h2>
+          </div>
+        </div>
+        <div class="index-topic__top--right" />
+      </div>
+      <div class="index-topic__bottom">
+        <Swiper
+          :modules="modules"
+          direction="horizontal"
+          :slides-per-view="slidesPerView"
+          :space-between="10"
+          :loop="topicList.length > 4"
+          :autoplay="topicList.length > 4 ? { delay: 3000, disableOnInteraction: false } : false"
+          class="index-topic__swiper"
+        >
+          <SwiperSlide v-for="item in topicList" :key="item.id">
+            <div class="index-topic__slide">
+              <img :src="item.image" :alt="item.name || 'topic-item'">
+            </div>
+          </SwiperSlide>
+        </Swiper>
+      </div>
+    </div>
+  </div>
+</template>
+
 <style scoped lang="scss">
 // 最外层容器
 .index-topic-wrapper {
   width: 100%;
-  height: 100%;
+  height: 340px;
   display: flex;
+  background: #efefef;
 }
 
 // 块容器 - 主容器
@@ -85,7 +112,7 @@ onMounted(() => {
 
         // 英文标题 - 短规则
         .index-topic__title-en {
-          color: #e5e5e5;
+          color: #d8d8d8;
           font-size: 27px;
           line-height: 0;
           font-weight: bold;
@@ -102,20 +129,18 @@ onMounted(() => {
     }
   }
 
-  // 底部区域 - 中等规则
   .index-topic__bottom {
-    gap: 30px;
-    display: grid;
+    margin-top: 50px;
     position: relative;
-    grid-template-columns: repeat(2, 1fr);
-
-    // 条目项 - 中等规则
-    .index-topic__entry-item {
-      height: 300px;
+    .index-topic__swiper {
+      width: 100%;
+      height: 122px;
+    }
+    .index-topic__slide {
+      width: 100%;
+      height: 122px;
       overflow: hidden;
       cursor: pointer;
-
-      // 图片元素 - 短规则
       img {
         width: 100%;
         height: 100%;

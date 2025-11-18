@@ -291,17 +291,19 @@ const modules = [Autoplay, Pagination]
 // 最外层容器
 .index-news-wrapper {
   width: 100%;
-  height: 100%;
+  height: 700px;
   display: flex;
+  overflow: hidden;
+  position: relative;
   align-items: center;
   background-color: #fff;
   &__bg {
     position: absolute;
-    top: 430px;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    bottom: -500px;
+    object-fit: fill;
     pointer-events: none;
   }
 }
@@ -481,13 +483,15 @@ const modules = [Autoplay, Pagination]
     .index-news__bottom--right {
       flex: 1;
       display: flex;
+      position: relative;
       flex-direction: column;
+      height: 427px;
 
       // 新闻列表容器 - 中等规则
       .index-news__list {
+        flex: 1;
         display: grid;
-        gap: 27px;
-        margin-bottom: 27px;
+        gap: 64px;
         grid-template-columns: 1fr 1fr;
 
         // 列表项 - 中等规则
@@ -574,6 +578,10 @@ const modules = [Autoplay, Pagination]
       // 查看更多区域 - 短规则
       .index-news__view-more {
         display: flex;
+        margin-top: auto;
+        position: absolute;
+        bottom: -40px;
+        left: 0;
 
         // 查看更多按钮 - 中等规则
         .index-news__view-more-btn {

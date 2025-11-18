@@ -5,7 +5,22 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
 
-  modules: ["@nuxt/ui", "@nuxt/eslint", "@nuxt/image", "@nuxt/scripts", "@nuxt/test-utils", "v-gsap-nuxt", "@pinia/nuxt"],
+  modules: [
+    "@nuxt/ui",
+    "@nuxt/eslint",
+    "@nuxt/image",
+    "@nuxt/scripts",
+    "@nuxt/test-utils",
+    "v-gsap-nuxt",
+    "@pinia/nuxt",
+    "nuxt-echarts",
+  ],
+
+  echarts: {
+    renderer: "canvas",
+    charts: ["LineChart"],
+    components: ["GridComponent", "TooltipComponent"],
+  },
 
   css: ["~/assets/css/main.css"],
 

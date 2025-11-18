@@ -8,10 +8,17 @@ const year = ref('2024')
 const isLoading = ref(false)
 const allData = ref<any[]>([])
 const timelineRef = ref<HTMLElement | null>(null)
+const detailsRef = ref<HTMLElement | null>(null)
 const timelineSpacer = ref(0)
 const SCROLL_THROTTLE_DELAY = 250
 let wheelLocked = false
 let wheelUnlockTimer: ReturnType<typeof setTimeout> | null = null
+const DETAIL_AUTO_INTERVAL = 4000
+const DETAILS_WHEEL_THROTTLE = 300
+const activeDetailIndex = ref(0)
+let detailAutoTimer: ReturnType<typeof setInterval> | null = null
+let detailWheelLocked = false
+let detailWheelTimer: ReturnType<typeof setTimeout> | null = null
 
 /**
  * 统一从接口响应中提取年份信息；优先使用 normalizeHistoryData 写入的 normalizedYear。
@@ -50,6 +57,16 @@ const years = computed(() => {
 const currentData = computed(() => {
   return allData.value.filter(item => resolveYearFromItem(item) === year.value)
 })
+
+const activeDetail = computed(() => currentData.value[activeDetailIndex.value] ?? null)
+
+const activeDetailImage = computed(() => {
+  if (!activeDetail.value)
+    return image
+  return activeDetail.value.imageUrl || activeDetail.value.image || image
+})
+
+const isDetailsCentered = computed(() => currentData.value.length <= 2)
 
 /**
  * 将后端返回的 { [year]: Event[] } 结构转成数组，便于现有渲染逻辑复用
@@ -182,6 +199,76 @@ function scrollToActiveYear() {
   }
 }
 
+function handleDetailsWheel(event: WheelEvent) {
+  if (currentData.value.length <= 1)
+    return
+
+  event.preventDefault()
+  if (detailWheelLocked)
+    return
+  const direction = event.deltaY > 0 ? 1 : event.deltaY < 0 ? -1 : 0
+  if (!direction)
+    return
+
+  changeActiveDetail(direction)
+  restartDetailAutoScroll()
+  detailWheelLocked = true
+  if (detailWheelTimer)
+    clearTimeout(detailWheelTimer)
+  detailWheelTimer = setTimeout(() => {
+    detailWheelLocked = false
+  }, DETAILS_WHEEL_THROTTLE)
+}
+
+function changeActiveDetail(step: number) {
+  const total = currentData.value.length
+  if (total <= 1)
+    return
+  const next = (activeDetailIndex.value + step + total) % total
+  activeDetailIndex.value = next
+}
+
+function scrollDetailsToActive(behavior: ScrollBehavior = 'smooth') {
+  if (!detailsRef.value)
+    return
+  const container = detailsRef.value
+  if (container.scrollHeight <= container.clientHeight + 1)
+    return
+
+  const items = detailsRef.value.querySelectorAll('.history__details-item')
+  const target = items[activeDetailIndex.value] as HTMLElement | undefined
+  if (!target)
+    return
+
+  const containerRect = container.getBoundingClientRect()
+  const targetRect = target.getBoundingClientRect()
+  const offset = targetRect.top - containerRect.top - containerRect.height / 2 + targetRect.height / 2
+  container.scrollBy({
+    top: offset,
+    behavior,
+  })
+}
+
+function startDetailAutoScroll() {
+  stopDetailAutoScroll()
+  if (currentData.value.length <= 1)
+    return
+  detailAutoTimer = setInterval(() => {
+    changeActiveDetail(1)
+  }, DETAIL_AUTO_INTERVAL)
+}
+
+function stopDetailAutoScroll() {
+  if (detailAutoTimer)
+    clearInterval(detailAutoTimer)
+  detailAutoTimer = null
+}
+
+function restartDetailAutoScroll() {
+  stopDetailAutoScroll()
+  startDetailAutoScroll()
+}
+
 /**
  * 计算时间线顶部和底部的占位高度，确保首尾年份也能居中对齐
  */
@@ -216,6 +303,27 @@ watch(
   },
 )
 
+watch(
+  currentData,
+  (list) => {
+    activeDetailIndex.value = 0
+    stopDetailAutoScroll()
+    setTimeout(() => {
+      scrollDetailsToActive('auto')
+    }, 0)
+    if (list.length > 0)
+      startDetailAutoScroll()
+  },
+  { immediate: true },
+)
+
+watch(
+  () => activeDetailIndex.value,
+  () => {
+    setTimeout(() => scrollDetailsToActive(), 0)
+  },
+)
+
 // 初始化 - 获取所有数据
 fetchHistoryData()
 
@@ -228,6 +336,9 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', updateTimelineSpacer)
   if (wheelUnlockTimer)
     clearTimeout(wheelUnlockTimer)
+  if (detailWheelTimer)
+    clearTimeout(detailWheelTimer)
+  stopDetailAutoScroll()
 })
 </script>
 
@@ -261,16 +372,31 @@ onBeforeUnmount(() => {
       <div class="history__right">
         <div class="history__details">
           <div class="history__details-content">
-            <div v-for="item in currentData" :key="item.id" class="history__details-item">
-              <div class="history__details-indicator" />
-              <div class="history__details-text">
-                <span class="history__details-title">{{ item.title }}</span>
-                <span class="history__details-desc">{{ item.description }}</span>
+            <div class="history__details-pointer" />
+            <div
+              ref="detailsRef"
+              class="history__details-list"
+              :class="{ 'history__details-list--centered': isDetailsCentered }"
+              @wheel.prevent="handleDetailsWheel"
+            >
+              <div
+                v-for="(item, index) in currentData"
+                :key="item.id"
+                class="history__details-item"
+                :class="{ 'history__details-item--active': index === activeDetailIndex }"
+              >
+                <div class="history__details-indicator-wrapper">
+                  <div v-if="index === activeDetailIndex" class="history__details-indicator" />
+                </div>
+                <div class="history__details-text">
+                  <span class="history__details-title">{{ item.title || item.date }}</span>
+                  <span class="history__details-desc" v-html="item.description" />
+                </div>
               </div>
             </div>
           </div>
           <div class="history__details-image">
-            <img :src="image" :alt="year">
+            <img :src="activeDetailImage" :alt="activeDetail?.title || year" loading="lazy">
           </div>
         </div>
         <!-- 加载状态 -->
@@ -458,21 +584,74 @@ onBeforeUnmount(() => {
   &__details-content {
     flex: 1;
     display: flex;
+    position: relative;
+    height: 280px;
+    overflow: hidden;
+  }
+
+  &__details-pointer {
+    width: 0;
+    height: 0;
+    position: absolute;
+    left: -24px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 16px solid $primary-color;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  &__details-list {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 10px 0;
+    scroll-behavior: smooth;
+    display: flex;
     flex-direction: column;
-    gap: 60px;
+    gap: 20px;
+    justify-content: flex-start;
+
+    &--centered {
+      justify-content: center;
+    }
   }
 
   &__details-item {
-    gap: 30px;
+    gap: 20px;
     display: flex;
+    align-items: center;
+    padding: 16px 10px;
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+
+    &--active {
+      transform: scale(1.02);
+      opacity: 1;
+
+      .history__details-title {
+        color: $primary-color;
+      }
+    }
+
+    &:not(&--active) {
+      opacity: 0.7;
+    }
+  }
+
+  &__details-indicator-wrapper {
+    width: 16px;
+    display: flex;
+    justify-content: center;
     align-items: center;
   }
 
   &__details-indicator {
-    flex: 0 0 auto;
     width: 0;
     height: 0;
-    margin-top: 4px;
     border-left: 16px solid $primary-color;
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
@@ -495,6 +674,7 @@ onBeforeUnmount(() => {
     font-size: 18px;
     font-weight: bold;
     color: #333;
+    transition: color 0.3s ease;
   }
 
   &__details-desc {
@@ -506,8 +686,10 @@ onBeforeUnmount(() => {
   &__details-image {
     flex: 0 0 350px;
     width: 350px;
-    height: 200px;
+    height: 240px;
     overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 
     img {
       width: 100%;

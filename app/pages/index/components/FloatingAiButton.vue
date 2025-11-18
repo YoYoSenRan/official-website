@@ -1,35 +1,24 @@
+<script setup lang="ts">
+import aiIcon from '~/assets/images/ai.png'
+
+const props = withDefaults(defineProps<{ href?: string, label?: string }>(), {
+  href: 'https://www.perplexity.ai/',
+  label: '智能助理',
+})
+const { href, label } = props
+</script>
+
 <template>
   <div class="ai-fab">
     <a :href="href" target="_blank" rel="noopener noreferrer" class="ai-fab__btn">
       <span class="ai-fab__icon" aria-hidden="true">
-        <svg viewBox="0 0 64 64" width="36" height="36">
-          <circle cx="32" cy="32" r="30" fill="url(#g)" />
-          <defs>
-            <radialGradient id="g" cx="50%" cy="30%" r="70%">
-              <stop offset="0%" stop-color="#e0f2fe" />
-              <stop offset="60%" stop-color="#93c5fd" />
-              <stop offset="100%" stop-color="#3b82f6" />
-            </radialGradient>
-          </defs>
-          <rect x="16" y="20" width="32" height="26" rx="13" fill="#fff" />
-          <circle cx="26" cy="33" r="6" fill="#0ea5e9" />
-          <circle cx="38" cy="33" r="6" fill="#0ea5e9" />
-          <rect x="24" y="41" width="16" height="3" rx="1.5" fill="#60a5fa" />
-        </svg>
+        <img :src="aiIcon" alt="AI 助理">
       </span>
       <span class="ai-fab__ai">AI</span>
       <span class="ai-fab__text">{{ label }}</span>
     </a>
   </div>
 </template>
-
-<script setup lang="ts">
-const props = withDefaults(defineProps<{ href?: string; label?: string }>(), {
-  href: "https://www.perplexity.ai/",
-  label: "智能助理",
-})
-const { href, label } = props
-</script>
 
 <style scoped lang="scss">
 .ai-fab {
@@ -41,14 +30,13 @@ const { href, label } = props
 .ai-fab__btn {
   position: relative;
   gap: 6px;
-  padding: 2px;
-  padding-bottom: 24px;
+  padding: 4px;
+  padding-bottom: 12px;
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
   color: #108cf0;
-  width: 68px;
   border-radius: 9999px;
   text-decoration: none;
   background: #fff;
@@ -58,10 +46,16 @@ const { href, label } = props
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: radial-gradient(ellipse at center, #e0f2fe 0%, #93c5fd 60%, #3b82f6 100%);
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 .ai-fab__text {
   margin-top: 0;
@@ -93,13 +87,12 @@ const { href, label } = props
     bottom: 16px;
   }
   .ai-fab__btn {
-    width: 60px;
-    height: 260px;
-    padding: 10px 6px;
+    width: 80px;
+    padding: 10px 6px 26px;
   }
   .ai-fab__icon {
-    width: 56px;
-    height: 56px;
+    width: 70px;
+    height: 70px;
   }
   .ai-fab__text {
     font-size: 14px;

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import generateBg from '~/assets/images/yzj.png'
 
 const now = ref('')
 const labels = ref<string[]>([])
@@ -50,6 +51,13 @@ const option = computed(() => ({
   ],
 }))
 
+const generateBgStyle = {
+  backgroundImage: `url(${generateBg})`,
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
+}
+
 onMounted(() => {
   const t = new Date()
   const fmt = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')} ${String(t.getHours()).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}:${String(t.getSeconds()).padStart(2, '0')}`
@@ -63,7 +71,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="generate">
+  <div class="generate" :style="generateBgStyle">
     <div class="generate__layout">
       <div class="generate__top">
         <div class="generate__top-left">
@@ -199,6 +207,7 @@ onMounted(() => {
   width: 100%;
   height: 463px;
   display: flex;
+  padding-bottom: 45px;
   background: #efefef;
 
   &__layout {

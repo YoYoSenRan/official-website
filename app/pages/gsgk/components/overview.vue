@@ -1,21 +1,96 @@
+<script setup lang="ts">
+import { onMounted, onUnmounted, ref } from 'vue'
+import overviewBg from '~/assets/images/overview-top-bg.webp'
+import image1 from '~/assets/images/swiper/swiper-1.jpg'
+import image2 from '~/assets/images/swiper/swiper-2.jpg'
+import image3 from '~/assets/images/swiper/swiper-3.jpg'
+
+// 数据定义
+interface OverviewItem {
+  title: string
+  description: string
+  image: string
+}
+
+const overviewItems: OverviewItem[] = [
+  {
+    title: '地理位置',
+    description: '坐落于红军长征"不朽定桥"垂直史的红城泸定；位于甘孜州白治州大渡河下流中游，坝址下游港定县城2.5公里。',
+    image: image1,
+  },
+  {
+    title: '重要意义',
+    description: '作为重要的水电枢纽工程，在防洪、发电、灌溉等方面具有重要战略意义。',
+    image: image2,
+  },
+  {
+    title: '技术规格',
+    description: '采用最先进的水利发电技术，设计装机容量920MW，是国内重要的清洁能源基地。',
+    image: image3,
+  },
+]
+
+const currentIndex = ref(0)
+let autoPlayTimer: NodeJS.Timeout | null = null
+
+/**
+ * 设置当前显示的索引
+ */
+function setCurrentIndex(index: number) {
+  currentIndex.value = index
+  resetAutoPlay()
+}
+
+/**
+ * 自动轮播逻辑
+ */
+function startAutoPlay() {
+  autoPlayTimer = setInterval(() => {
+    currentIndex.value = (currentIndex.value + 1) % overviewItems.length
+  }, 5000)
+}
+
+/**
+ * 停止并重新开始自动播放
+ */
+function resetAutoPlay() {
+  if (autoPlayTimer) {
+    clearInterval(autoPlayTimer)
+  }
+  startAutoPlay()
+}
+
+onMounted(() => {
+  startAutoPlay()
+})
+
+onUnmounted(() => {
+  if (autoPlayTimer) {
+    clearInterval(autoPlayTimer)
+  }
+})
+</script>
+
 <template>
   <section class="overview" data-anchor="gsjj">
     <div class="overview__container">
       <!-- 上面部分：左图右文+指标 -->
       <div class="overview__top">
         <!-- 背景图 -->
-        <img :src="overviewBg" alt="背景" class="overview__top-bg" />
+        <img :src="overviewBg" alt="背景" class="overview__top-bg">
         <div class="overview__wrapper">
           <!-- 左侧图片 -->
           <div class="overview__image">
-            <img src="@/assets/images/swiper/swiper-1.jpg" alt="公司介绍" />
+            <img src="@/assets/images/swiper/swiper-1.jpg" alt="公司介绍">
           </div>
 
           <!-- 右侧内容 -->
           <div class="overview__content">
             <!-- 标题和描述 -->
             <div class="overview__text">
-              <h2 class="overview__title">公司介绍</h2>
+              <h2 class="overview__title">
+                公司介绍
+              </h2>
               <p class="overview__description">
                 四川华电泸定水电有限公司（以下简称公司）于2006年6月注册成立，由华电国际电力股份有限公司全资设立，负责泸定水电站的投资、建设和运营。
               </p>
@@ -24,16 +99,28 @@
             <!-- 数据指标 -->
             <div class="overview__metrics">
               <div class="overview__metric">
-                <div class="overview__metric-value">920</div>
-                <div class="overview__metric-label">MW总装机容量</div>
+                <div class="overview__metric-value">
+                  920
+                </div>
+                <div class="overview__metric-label">
+                  MW总装机容量
+                </div>
               </div>
               <div class="overview__metric">
-                <div class="overview__metric-value">37.8</div>
-                <div class="overview__metric-label">亿KW.h年发电量</div>
+                <div class="overview__metric-value">
+                  37.8
+                </div>
+                <div class="overview__metric-label">
+                  亿KW.h年发电量
+                </div>
               </div>
               <div class="overview__metric">
-                <div class="overview__metric-value">2012</div>
-                <div class="overview__metric-label">年全面投产</div>
+                <div class="overview__metric-value">
+                  2012
+                </div>
+                <div class="overview__metric-label">
+                  年全面投产
+                </div>
               </div>
             </div>
           </div>
@@ -64,7 +151,7 @@
                   <span class="overview__card-content-description">{{ item.description }}</span>
                 </div>
                 <div class="overview__card-image">
-                  <img :src="`${item.image}`" alt="" />
+                  <img :src="`${item.image}`" alt="">
                 </div>
               </div>
             </div>
@@ -74,79 +161,6 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue"
-import image1 from "~/assets/images/swiper/swiper-1.jpg"
-import image2 from "~/assets/images/swiper/swiper-2.jpg"
-import image3 from "~/assets/images/swiper/swiper-3.jpg"
-import overviewBg from "~/assets/images/overview-top-bg.webp"
-
-// 数据定义
-interface OverviewItem {
-  title: string
-  description: string
-  image: string
-}
-
-const overviewItems: OverviewItem[] = [
-  {
-    title: "地理位置",
-    description: '坐落于红军长征"不朽定桥"垂直史的红城泸定；位于甘孜州白治州大渡河下流中游，坝址下游港定县城2.5公里。',
-    image: image1,
-  },
-  {
-    title: "重要意义",
-    description: "作为重要的水电枢纽工程，在防洪、发电、灌溉等方面具有重要战略意义。",
-    image: image2,
-  },
-  {
-    title: "技术规格",
-    description: "采用最先进的水利发电技术，设计装机容量920MW，是国内重要的清洁能源基地。",
-    image: image3,
-  },
-]
-
-const currentIndex = ref(0)
-let autoPlayTimer: NodeJS.Timeout | null = null
-
-/**
- * 设置当前显示的索引
- */
-const setCurrentIndex = (index: number) => {
-  currentIndex.value = index
-  resetAutoPlay()
-}
-
-/**
- * 自动轮播逻辑
- */
-const startAutoPlay = () => {
-  autoPlayTimer = setInterval(() => {
-    currentIndex.value = (currentIndex.value + 1) % overviewItems.length
-  }, 5000)
-}
-
-/**
- * 停止并重新开始自动播放
- */
-const resetAutoPlay = () => {
-  if (autoPlayTimer) {
-    clearInterval(autoPlayTimer)
-  }
-  startAutoPlay()
-}
-
-onMounted(() => {
-  startAutoPlay()
-})
-
-onUnmounted(() => {
-  if (autoPlayTimer) {
-    clearInterval(autoPlayTimer)
-  }
-})
-</script>
 
 <style scoped lang="scss">
 /* 公司介绍区块样式 - BEM命名规范 */
@@ -189,7 +203,7 @@ onUnmounted(() => {
     min-width: 0;
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       pointer-events: none;
       top: -30px;
@@ -200,7 +214,7 @@ onUnmounted(() => {
     }
 
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       pointer-events: none;
       top: -30px;
@@ -283,7 +297,7 @@ onUnmounted(() => {
     position: relative;
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 0;
       left: 0;
@@ -305,7 +319,7 @@ onUnmounted(() => {
     position: relative;
     align-items: center;
     justify-content: space-between;
-    background: url("@/assets/images/swiper/swiper-1.jpg") center / cover no-repeat;
+    background: url('@/assets/images/swiper/swiper-1.jpg') center / cover no-repeat;
     background-attachment: fixed;
   }
 

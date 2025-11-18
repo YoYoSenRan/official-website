@@ -213,7 +213,7 @@ onMounted(() => {
   &__layout {
     gap: 20px;
     width: 100%;
-    padding: 80px 160px;
+    padding: 40px 160px;
     display: flex;
     overflow: hidden;
     flex-direction: column;

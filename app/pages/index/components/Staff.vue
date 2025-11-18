@@ -1,34 +1,7 @@
-<template>
-  <div class="index-staff-wrapper">
-    <div class="index-staff">
-      <div class="index-staff__top">
-        <div class="index-staff__top--left">
-          <div class="index-staff__title-section">
-            <p class="index-staff__title-en">In Focus</p>
-            <h2 class="index-staff__title-cn">职工风采</h2>
-          </div>
-        </div>
-        <div class="index-staff__top--right"></div>
-      </div>
-      <div class="index-staff__bottom">
-        <div class="index-staff__carousel-container">
-          <div class="index-staff__carousel-3d">
-            <div class="index-staff__carousel" :class="{ 'index-staff__carousel--paused': isHovered }" @mouseenter="pauseRotation" @mouseleave="resumeRotation">
-              <figure v-for="(item, index) in items" :key="index" class="index-staff__carousel-item">
-                <img class="index-staff__carousel-img" :src="item" alt="" />
-              </figure>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref, onMounted } from "vue"
-import { blockItem } from "~/api"
-import { buildFullUrl } from "~/utils/utils"
+import { onMounted, ref } from 'vue'
+import { blockItem } from '~/api'
+import { buildFullUrl } from '~/utils/utils'
 
 const items = ref<string[]>([])
 const isHovered = ref(false)
@@ -36,28 +9,28 @@ const isHovered = ref(false)
 /**
  * 暂停3D轮播旋转
  */
-const pauseRotation = () => {
+function pauseRotation() {
   isHovered.value = true
 }
 
 /**
  * 恢复3D轮播旋转
  */
-const resumeRotation = () => {
+function resumeRotation() {
   isHovered.value = false
 }
 
 /**
  * 获取职工风采数据
  */
-const fetchStaffData = async () => {
+async function fetchStaffData() {
   try {
-    const response = await blockItem({ block: "zhigongfengcai" })
+    const response = await blockItem({ block: 'zhigongfengcai' })
     // 处理返回的数据，提取图片URL并进行完整URL拼接
     items.value = (response || []).map((item: any) => buildFullUrl(item.image))
-    console.log("🚀 ~ fetchStaffData ~ items.value:", items.value)
-  } catch (error) {
-    console.error("Failed to fetch staff data:", error)
+  }
+  catch (error) {
+    console.error('Failed to fetch staff data:', error)
     items.value = []
   }
 }
@@ -66,6 +39,37 @@ onMounted(() => {
   fetchStaffData()
 })
 </script>
+
+<template>
+  <div class="index-staff-wrapper">
+    <div class="index-staff">
+      <div class="index-staff__top">
+        <div class="index-staff__top--left">
+          <div class="index-staff__title-section">
+            <p class="index-staff__title-en">
+              In Focus
+            </p>
+            <h2 class="index-staff__title-cn">
+              职工风采
+            </h2>
+          </div>
+        </div>
+        <div class="index-staff__top--right" />
+      </div>
+      <div class="index-staff__bottom">
+        <div class="index-staff__carousel-container">
+          <div class="index-staff__carousel-3d">
+            <div class="index-staff__carousel" :class="{ 'index-staff__carousel--paused': isHovered }" @mouseenter="pauseRotation" @mouseleave="resumeRotation">
+              <figure v-for="(item, index) in items" :key="index" class="index-staff__carousel-item">
+                <img class="index-staff__carousel-img" :src="item" alt="">
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped lang="scss">
 // 3D旋转动画
@@ -138,7 +142,7 @@ onMounted(() => {
     background-size: 90% 100%;
     background-repeat: no-repeat;
     background-position: center;
-    background-image: url("~/assets/images/bg_3d.png");
+    background-image: url('~/assets/images/bg_3d.png');
 
     // 轮播容器 - 中等规则
     .index-staff__carousel-container {

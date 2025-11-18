@@ -83,8 +83,9 @@ onMounted(() => {
 // 最外层容器
 .index-topic-wrapper {
   width: 100%;
-  height: 340px;
+  height: 420px;
   display: flex;
+  padding-top: 60px;
   background: #efefef;
 }
 
@@ -92,11 +93,9 @@ onMounted(() => {
 .index-topic {
   gap: 15px;
   width: 100%;
-  padding: 80px 160px;
+  padding: 0 160px;
   display: flex;
-  overflow: hidden;
   flex-direction: column;
-  justify-content: center;
 
   // 顶部区域
   .index-topic__top {

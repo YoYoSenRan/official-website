@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { developmentHistory } from '~/api/index'
-import historyBg from '~/assets/images/history-bg.webp'
+import { ref, watch, computed, onMounted, onBeforeUnmount } from 'vue'
 import image from '~/assets/images/swiper/swiper-2.jpg'
+import historyBg from '~/assets/images/history-bg.webp'
 
 const year = ref('2024')
 const isLoading = ref(false)
@@ -447,16 +447,16 @@ onBeforeUnmount(() => {
   padding: 60px 250px;
   position: relative;
   flex-direction: column;
-  background-color: #fff;
   background-size: cover;
+  background-color: #fff;
   background-repeat: no-repeat;
   background-position: center top;
 
   /* ============ 头部样式 ============ */
   &__header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
   }
 
   &__title-wrapper {
@@ -465,10 +465,10 @@ onBeforeUnmount(() => {
   }
 
   &__title {
+    color: #1f2937;
     margin: 0;
     font-size: 24px;
     font-weight: bold;
-    color: #1f2937;
   }
 
   /* ============ 内容布局 ============ */
@@ -497,65 +497,65 @@ onBeforeUnmount(() => {
   &__timeline-wrapper {
     width: 100%;
     height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    position: relative;
     padding: 30px 0;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
     scroll-behavior: smooth;
   }
 
   &__timeline-inner {
     display: flex;
-    flex-direction: column;
     position: relative;
+    flex-direction: column;
   }
 
   &__timeline-indicator {
     top: 50%;
     right: 50px;
-    z-index: 10;
     width: 0;
     height: 0;
+    z-index: 10;
     position: absolute;
     border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-right: 16px solid $primary-color;
     transition: transform 0.3s ease;
+    border-right: 16px solid $primary-color;
+    border-bottom: 10px solid transparent;
   }
 
   &__year-wrapper {
+    gap: 10px;
     display: flex;
     align-items: center;
-    gap: 10px;
   }
 
   &__year-indicator {
+    top: 50%;
+    right: 16px;
     width: 0;
     height: 0;
-    right: 16px;
-    top: 50%;
     z-index: 5;
     position: absolute;
     transform: translateY(-50%);
     border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
     border-right: 12px solid $primary-color;
+    border-bottom: 8px solid transparent;
     pointer-events: none;
   }
 
   &__year {
+    color: inherit;
     width: 80px;
-    margin: 15px 0;
-    padding: 0;
-    display: flex;
+    border: none;
     cursor: pointer;
+    margin: 15px 0;
+    display: flex;
+    padding: 0;
     font-size: 20px;
+    background: none;
     text-align: center;
     align-items: center;
     justify-content: center;
-    background: none;
-    border: none;
-    color: inherit;
 
     &--active {
       font-size: 26px;
@@ -566,8 +566,8 @@ onBeforeUnmount(() => {
   /* ============ 右侧内容 ============ */
   &__right {
     flex: 1;
-    padding: 60px;
     display: flex;
+    padding: 60px;
     position: relative;
     flex-direction: column;
     justify-content: center;
@@ -576,43 +576,43 @@ onBeforeUnmount(() => {
   &__details {
     gap: 40px;
     display: flex;
+    animation: fadeIn $transition-normal ease-in-out;
     align-items: center;
     justify-content: space-between;
-    animation: fadeIn $transition-normal ease-in-out;
   }
 
   &__details-content {
     flex: 1;
-    display: flex;
-    position: relative;
     height: 280px;
+    display: flex;
     overflow: hidden;
+    position: relative;
   }
 
   &__details-pointer {
+    top: 50%;
+    left: -24px;
     width: 0;
     height: 0;
+    z-index: 3;
     position: absolute;
-    left: -24px;
-    top: 50%;
     transform: translateY(-50%);
     border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
     border-left: 16px solid $primary-color;
-    z-index: 3;
+    border-bottom: 10px solid transparent;
     pointer-events: none;
   }
 
   &__details-list {
+    gap: 20px;
     width: 100%;
     height: 100%;
-    overflow-y: auto;
-    padding: 10px 0;
-    scroll-behavior: smooth;
     display: flex;
+    padding: 10px 0;
+    overflow-y: auto;
     flex-direction: column;
-    gap: 20px;
     justify-content: flex-start;
+    scroll-behavior: smooth;
 
     &--centered {
       justify-content: center;
@@ -622,15 +622,15 @@ onBeforeUnmount(() => {
   &__details-item {
     gap: 20px;
     display: flex;
-    align-items: center;
     padding: 16px 10px;
     transition:
       transform 0.3s ease,
       opacity 0.3s ease;
+    align-items: center;
 
     &--active {
-      transform: scale(1.02);
       opacity: 1;
+      transform: scale(1.02);
 
       .history__details-title {
         color: $primary-color;
@@ -645,41 +645,41 @@ onBeforeUnmount(() => {
   &__details-indicator-wrapper {
     width: 16px;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
   }
 
   &__details-indicator {
     width: 0;
     height: 0;
-    border-left: 16px solid $primary-color;
     border-top: 10px solid transparent;
+    border-left: 16px solid $primary-color;
     border-bottom: 10px solid transparent;
   }
 
   &__details-text {
+    gap: 10px;
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 10px;
   }
 
   &__details-date {
+    color: #999;
     font-size: 12px;
     font-weight: 500;
-    color: #999;
   }
 
   &__details-title {
-    font-size: 18px;
-    font-weight: bold;
     color: #333;
+    font-size: 18px;
     transition: color 0.3s ease;
+    font-weight: bold;
   }
 
   &__details-desc {
-    font-size: 14px;
     color: #666;
+    font-size: 14px;
     line-height: 1.8;
   }
 
@@ -688,8 +688,8 @@ onBeforeUnmount(() => {
     width: 350px;
     height: 240px;
     overflow: hidden;
-    border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
 
     img {
       width: 100%;
@@ -704,8 +704,8 @@ onBeforeUnmount(() => {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 100;
     display: flex;
+    z-index: 100;
     position: absolute;
     align-items: center;
     justify-content: center;
@@ -722,17 +722,17 @@ onBeforeUnmount(() => {
 
   &__loading-spinner {
     width: 40px;
-    height: 40px;
     border: 3px solid #e5e7eb;
-    border-top-color: $primary-color;
-    border-radius: 50%;
+    height: 40px;
     animation: spin 1s linear infinite;
+    border-radius: 50%;
+    border-top-color: $primary-color;
   }
 
   &__loading-text {
+    color: #4b5563;
     font-size: 14px;
     font-weight: 500;
-    color: #4b5563;
   }
 }
 

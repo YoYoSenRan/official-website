@@ -1,3 +1,5 @@
+<script setup lang="ts"></script>
+
 <template>
   <div class="layouts-container">
     <Header />
@@ -7,12 +9,10 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
-
 <style scoped lang="scss">
 .layouts-container {
-  display: flex;
   height: 100vh;
+  display: flex;
   overflow: hidden;
   flex-direction: column;
   background-color: #fff;

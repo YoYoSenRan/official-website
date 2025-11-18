@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { articlePageListByAlias } from '~/api'
-import footerBg from '~/assets/images/footer-bg.png'
 import qrcode from '~/assets/images/qrcode.webp'
+import footerBg from '~/assets/images/footer-bg.png'
 
 const mediaItems = ref<any[]>([])
 const mediaValue = ref('')
@@ -138,9 +138,9 @@ onMounted(() => {
   &__bg {
     top: 0;
     left: 0;
-    z-index: -1;
     width: 100%;
     height: 100%;
+    z-index: -1;
     position: absolute;
     background-size: 100% 100%;
     background-repeat: no-repeat;
@@ -158,8 +158,8 @@ onMounted(() => {
 
   // 链接区域
   &__links {
-    flex: 1;
     gap: 30px;
+    flex: 1;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
   }
@@ -173,12 +173,12 @@ onMounted(() => {
 
   // 列标题
   &__column-title {
+    color: #333333;
     margin: 0;
     font-size: 22px;
     font-weight: 600;
-    color: #333333;
-    letter-spacing: 0.5px;
     margin-bottom: 8px;
+    letter-spacing: 0.5px;
   }
 
   // 二维码
@@ -186,8 +186,8 @@ onMounted(() => {
     width: 150px;
     height: 150px;
     display: flex;
-    flex-shrink: 0;
     align-items: center;
+    flex-shrink: 0;
     justify-content: center;
   }
 

@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "@nuxt/ui";
+@import 'tailwindcss';
+@import '@nuxt/ui';
 
 * {
   box-sizing: border-box;
@@ -12,9 +12,9 @@ body {
 
 a {
   color: inherit;
+  cursor: pointer;
   text-decoration: none;
   background-color: transparent;
-  cursor: pointer;
 }
 
 /* 隐藏所有滚动条 */

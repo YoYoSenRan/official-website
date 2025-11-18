@@ -28,19 +28,19 @@ import ldbz from '~/assets/images/ldbz.png'
 /* 领导班子区块样式 */
 .section {
   width: 100%;
-  padding: 80px 200px;
-  scroll-margin-top: 60px;
-  background-color: #fafafa;
   display: flex;
+  padding: 80px 200px;
   align-items: center;
   justify-content: center;
+  background-color: #fafafa;
+  scroll-margin-top: 60px;
 
   &__container {
-    max-width: 1200px;
+    gap: 32px;
     width: 100%;
     display: flex;
+    max-width: 1200px;
     flex-direction: column;
-    gap: 32px;
   }
 
   &__header {
@@ -57,8 +57,8 @@ import ldbz from '~/assets/images/ldbz.png'
   &__title-en {
     color: #d8d8d8;
     font-size: 24px;
-    line-height: 1.2;
     font-weight: bold;
+    line-height: 1.2;
     margin-bottom: 10px;
     text-transform: uppercase;
   }
@@ -66,19 +66,19 @@ import ldbz from '~/assets/images/ldbz.png'
   &__title-cn {
     color: #1f2937;
     font-size: 32px;
-    line-height: 1.2;
     font-weight: bold;
+    line-height: 1.2;
   }
 
   &__content {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 
     img {
-      max-width: 100%;
       height: auto;
       display: block;
+      max-width: 100%;
     }
   }
 }

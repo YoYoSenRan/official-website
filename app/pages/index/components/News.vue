@@ -1,93 +1,14 @@
-<template>
-  <div class="index-news-wrapper">
-    <img :src="bg" class="index-news-wrapper__bg" />
-    <div class="index-news">
-      <div class="index-news__top">
-        <div class="index-news__top--left">
-          <div class="index-news__title-section">
-            <p class="index-news__title-en">CORPORATE</p>
-            <h2 class="index-news__title-cn">新闻中心</h2>
-          </div>
-        </div>
-        <div class="index-news__top--right">
-          <div class="index-news__tabs">
-            <div
-              v-for="(tab, index) in tabs"
-              :key="index"
-              class="index-news__tab-item"
-              :class="{ 'index-news__tab-item--active': activeTab === index }"
-              @click="handleTabChange(index)"
-            >
-              {{ tab.label }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="index-news__bottom">
-        <div class="index-news__bottom--left">
-          <Swiper
-            :modules="modules"
-            :slides-per-view="1"
-            :loop="true"
-            :effect="'slide'"
-            :autoplay="{ delay: 5000, disableOnInteraction: false }"
-            :pagination="{ clickable: true }"
-            class="index-news__swiper"
-            @swiper="(swiper) => (swiperInstance = swiper)"
-          >
-            <SwiperSlide v-for="news in newsData" :key="news.id">
-              <div class="index-news__slide" @click="goToDetail(news.id)">
-                <img :src="news.image" :alt="news.title" class="index-news__slide-image" />
-                <div class="index-news__slide-date">
-                  <div class="index-news__date-year-month">{{ news.date }}</div>
-                  <div class="index-news__date-day">{{ news.day }}</div>
-                </div>
-                <div class="index-news__slide-title">{{ news.title }}</div>
-              </div>
-            </SwiperSlide>
-          </Swiper>
-        </div>
-        <div class="index-news__bottom--right">
-          <div class="index-news__list">
-            <div v-for="(item, index) in newsList" :key="activeTab + '-' + index" class="index-news__list-item" @click="goToDetail(item.id)">
-              <div class="index-news__list-item-date">
-                <div class="index-news__list-date-text">{{ item.date }}</div>
-                <div class="index-news__list-date-day">{{ item.day }}</div>
-              </div>
-              <div class="index-news__list-item-content">
-                <h3 class="index-news__list-item-title">{{ item.title }}</h3>
-                <p class="index-news__list-item-description">{{ item.description }}</p>
-              </div>
-            </div>
-          </div>
-          <div class="index-news__view-more">
-            <a href="javascript:void(0)" class="index-news__view-more-btn" @click="handleViewMore">查看更多</a>
-          </div>
-        </div>
-        <Transition name="loading-modal">
-          <div v-if="isLoading" class="index-news__loading-overlay">
-            <div class="index-news__loading-placeholder">
-              <div class="index-news__loading-spinner"></div>
-              <span class="index-news__loading-text">正在加载中...</span>
-            </div>
-          </div>
-        </Transition>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import "swiper/css"
-import "swiper/css/pagination"
-import { ref, onMounted, computed, watch } from "vue"
-import { Swiper, SwiperSlide } from "swiper/vue"
-import { Autoplay, Pagination } from "swiper/modules"
-import bg from "~/assets/images/bg-2.png"
-import { headerArticlePageList, blockItem } from "~/api"
-import { useMenuStore } from "~/store/menu"
-import { buildFullUrl } from "~/utils/utils"
-import dayjs from "dayjs"
+import 'swiper/css'
+import 'swiper/css/pagination'
+import { useMenuStore } from '~/store/menu'
+import { buildFullUrl } from '~/utils/utils'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Autoplay, Pagination } from 'swiper/modules'
+import { ref, watch, computed, onMounted } from 'vue'
+import { blockItem, headerArticlePageList } from '~/api'
+import bg from '~/assets/images/bg-2.png'
+import dayjs from 'dayjs'
 
 const router = useRouter()
 const menuStore = useMenuStore()
@@ -110,38 +31,38 @@ const tabs = computed(() => {
 /**
  * 格式化日期为 YYYY.MM 格式
  */
-const formatDateForList = (dateString: string) => {
-  return dayjs(dateString).format("YYYY.MM")
+function formatDateForList(dateString: string) {
+  return dayjs(dateString).format('YYYY.MM')
 }
 
 /**
  * 格式化日期为 DD 格式
  */
-const formatDateDay = (dateString: string) => {
-  return dayjs(dateString).format("DD")
+function formatDateDay(dateString: string) {
+  return dayjs(dateString).format('DD')
 }
 
 /**
  * 获取轮播图数据
  * 使用block-item接口，alias参数为xinwenzhongxin
  */
-const fetchCarouselData = async () => {
+async function fetchCarouselData() {
   try {
-    const response = await blockItem({ block: "xinwenzhongxin" })
+    const response = await blockItem({ block: 'xinwenzhongxin' })
     if (response && Array.isArray(response)) {
       // 转换轮播数据格式
       newsData.value = response.slice(0, 6).map((item: any) => ({
         id: item.id,
         title: item.title,
-        description: item.description || "",
+        description: item.description || '',
         image: buildFullUrl(item.image),
         date: formatDateForList(item.publishDate || item.created),
         day: formatDateDay(item.publishDate || item.created),
       }))
-      console.log("🚀 ~ fetchCarouselData ~ newsData.value:", newsData.value)
     }
-  } catch (error) {
-    console.error("Failed to fetch carousel data:", error)
+  }
+  catch (error) {
+    console.error('Failed to fetch carousel data:', error)
     newsData.value = []
   }
 }
@@ -149,7 +70,7 @@ const fetchCarouselData = async () => {
 /**
  * 获取新闻列表数据并转换格式
  */
-const fetchNewsData = async () => {
+async function fetchNewsData() {
   // 如果tabs还没有数据，先等待
   if (tabs.value.length === 0 || activeTab.value >= tabs.value.length) {
     return
@@ -168,7 +89,7 @@ const fetchNewsData = async () => {
       pageSize: 6,
     })
 
-    if (response && typeof response === "object") {
+    if (response && typeof response === 'object') {
       const resData = response as any
       const articles = (resData.content || []).slice(0, 6)
 
@@ -176,7 +97,7 @@ const fetchNewsData = async () => {
       const formattedArticles = articles.map((item: any) => ({
         id: item.id,
         title: item.title,
-        description: item.description || "",
+        description: item.description || '',
         image: buildFullUrl(item.image),
         date: formatDateForList(item.publishDate || item.created),
         day: formatDateDay(item.publishDate || item.created),
@@ -185,10 +106,12 @@ const fetchNewsData = async () => {
       // 设置列表数据
       newsList.value = formattedArticles
     }
-  } catch (error) {
-    console.error("Failed to fetch news data:", error)
+  }
+  catch (error) {
+    console.error('Failed to fetch news data:', error)
     newsList.value = []
-  } finally {
+  }
+  finally {
     isLoading.value = false
   }
 }
@@ -196,8 +119,9 @@ const fetchNewsData = async () => {
 /**
  * 监听 tab 切换
  */
-const handleTabChange = (index: number) => {
-  if (activeTab.value === index) return
+function handleTabChange(index: number) {
+  if (activeTab.value === index)
+    return
 
   activeTab.value = index
   fetchNewsData()
@@ -232,7 +156,7 @@ watch(
 /**
  * 跳转到新闻列表页面
  */
-const handleViewMore = () => {
+function handleViewMore() {
   if (tabs.value.length === 0 || activeTab.value >= tabs.value.length) {
     return
   }
@@ -243,7 +167,7 @@ const handleViewMore = () => {
   }
 
   router.push({
-    path: "/xwzx",
+    path: '/xwzx',
     query: { id: currentTab.value },
   })
 }
@@ -251,7 +175,7 @@ const handleViewMore = () => {
 /**
  * 跳转到新闻详情页
  */
-const goToDetail = (id: string) => {
+function goToDetail(id: string) {
   router.push({
     path: `/news/detail/${id}`,
   })
@@ -265,6 +189,103 @@ onMounted(() => {
 
 const modules = [Autoplay, Pagination]
 </script>
+
+<template>
+  <div class="index-news-wrapper">
+    <img :src="bg" class="index-news-wrapper__bg">
+    <div class="index-news">
+      <div class="index-news__top">
+        <div class="index-news__top--left">
+          <div class="index-news__title-section">
+            <p class="index-news__title-en">
+              CORPORATE
+            </p>
+            <h2 class="index-news__title-cn">
+              新闻中心
+            </h2>
+          </div>
+        </div>
+        <div class="index-news__top--right">
+          <div class="index-news__tabs">
+            <div
+              v-for="(tab, index) in tabs"
+              :key="index"
+              class="index-news__tab-item"
+              :class="{ 'index-news__tab-item--active': activeTab === index }"
+              @click="handleTabChange(index)"
+            >
+              {{ tab.label }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="index-news__bottom">
+        <div class="index-news__bottom--left">
+          <Swiper
+            :modules="modules"
+            :slides-per-view="1"
+            :loop="true"
+            effect="slide"
+            :autoplay="{ delay: 5000, disableOnInteraction: false }"
+            :pagination="{ clickable: true }"
+            class="index-news__swiper"
+            @swiper="(swiper) => (swiperInstance = swiper)"
+          >
+            <SwiperSlide v-for="news in newsData" :key="news.id">
+              <div class="index-news__slide" @click="goToDetail(news.id)">
+                <img :src="news.image" :alt="news.title" class="index-news__slide-image">
+                <div class="index-news__slide-date">
+                  <div class="index-news__date-year-month">
+                    {{ news.date }}
+                  </div>
+                  <div class="index-news__date-day">
+                    {{ news.day }}
+                  </div>
+                </div>
+                <div class="index-news__slide-title">
+                  {{ news.title }}
+                </div>
+              </div>
+            </SwiperSlide>
+          </Swiper>
+        </div>
+        <div class="index-news__bottom--right">
+          <div class="index-news__list">
+            <div v-for="(item, index) in newsList" :key="`${activeTab}-${index}`" class="index-news__list-item" @click="goToDetail(item.id)">
+              <div class="index-news__list-item-date">
+                <div class="index-news__list-date-text">
+                  {{ item.date }}
+                </div>
+                <div class="index-news__list-date-day">
+                  {{ item.day }}
+                </div>
+              </div>
+              <div class="index-news__list-item-content">
+                <h3 class="index-news__list-item-title">
+                  {{ item.title }}
+                </h3>
+                <p class="index-news__list-item-description">
+                  {{ item.description }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="index-news__view-more">
+            <a href="javascript:void(0)" class="index-news__view-more-btn" @click="handleViewMore">查看更多</a>
+          </div>
+        </div>
+        <Transition name="loading-modal">
+          <div v-if="isLoading" class="index-news__loading-overlay">
+            <div class="index-news__loading-placeholder">
+              <div class="index-news__loading-spinner" />
+              <span class="index-news__loading-text">正在加载中...</span>
+            </div>
+          </div>
+        </Transition>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped lang="scss">
 // Loading spinner animation
@@ -298,11 +319,11 @@ const modules = [Autoplay, Pagination]
   align-items: center;
   background-color: #fff;
   &__bg {
-    position: absolute;
     left: 0;
     width: 100%;
-    height: 100%;
     bottom: -500px;
+    height: 100%;
+    position: absolute;
     object-fit: fill;
     pointer-events: none;
   }
@@ -312,9 +333,9 @@ const modules = [Autoplay, Pagination]
 .index-news {
   gap: 20px;
   width: 100%;
-  padding: 80px 160px;
   margin: 0 auto;
   display: flex;
+  padding: 80px 160px;
   flex-direction: column;
 
   // 顶部区域
@@ -333,8 +354,8 @@ const modules = [Autoplay, Pagination]
         .index-news__title-en {
           color: #e5e5e5;
           font-size: 27px;
-          line-height: 0;
           font-weight: bold;
+          line-height: 0;
           margin-bottom: 13px;
         }
 
@@ -355,13 +376,13 @@ const modules = [Autoplay, Pagination]
 
         // 标签项 - 中等规则
         .index-news__tab-item {
+          color: #1f2937;
+          cursor: pointer;
           padding: 7px;
           font-size: 20px;
-          color: #1f2937;
-          font-weight: 500;
-          cursor: pointer;
           font-size: 22px;
           transition: color 0.3s ease;
+          font-weight: 500;
 
           &:hover,
           &.index-news__tab-item--active {
@@ -407,8 +428,8 @@ const modules = [Autoplay, Pagination]
         :deep(.swiper-pagination) {
           left: auto;
           right: 27px;
-          bottom: 24px;
           width: fit-content;
+          bottom: 24px;
         }
 
         // 轮播项 - 短规则
@@ -435,8 +456,8 @@ const modules = [Autoplay, Pagination]
           top: 27px;
           right: 27px;
           z-index: 10;
-          text-align: right;
           position: absolute;
+          text-align: right;
 
           // 年月文本 - 短规则
           .index-news__date-year-month {
@@ -456,25 +477,25 @@ const modules = [Autoplay, Pagination]
 
         // 标题文本 - 中等规则
         .index-news__slide-title {
-          width: 100%;
           left: 0;
-          height: 65px;
-          bottom: 0;
-          right: 0;
-          z-index: 10;
           color: #fff;
+          right: 0;
+          width: 100%;
+          bottom: 0;
+          height: 65px;
+          display: -webkit-box;
+          z-index: 10;
+          overflow: hidden;
+          position: absolute;
           font-size: 20px;
+          background: linear-gradient(to bottom, transparent, #000);
+          line-clamp: 1;
+          font-weight: 500;
           line-height: 60px;
           padding-left: 30px;
-          font-weight: 500;
           padding-right: 180px;
-          position: absolute;
-          background: linear-gradient(to bottom, transparent, #000);
-          display: -webkit-box;
-          -webkit-line-clamp: 1;
-          line-clamp: 1;
           -webkit-box-orient: vertical;
-          overflow: hidden;
+          -webkit-line-clamp: 1;
         }
       }
     }
@@ -482,26 +503,26 @@ const modules = [Autoplay, Pagination]
     // 底部右侧 - 新闻列表
     .index-news__bottom--right {
       flex: 1;
+      height: 427px;
       display: flex;
       position: relative;
       flex-direction: column;
-      height: 427px;
 
       // 新闻列表容器 - 中等规则
       .index-news__list {
+        gap: 64px;
         flex: 1;
         display: grid;
-        gap: 64px;
         grid-template-columns: 1fr 1fr;
 
         // 列表项 - 中等规则
         .index-news__list-item {
           gap: 21px;
-          display: flex;
           cursor: pointer;
-          border-radius: 5px;
-          align-items: center;
+          display: flex;
           transition: all 0.3s ease;
+          align-items: center;
+          border-radius: 5px;
 
           &:hover {
             .index-news__list-item-content {
@@ -514,15 +535,15 @@ const modules = [Autoplay, Pagination]
           // 日期框 - 较长规则
           .index-news__list-item-date {
             width: 80px;
+            border: 1px solid #e5e7eb;
             height: 100px;
             height: 15 0px;
-            flex-shrink: 0;
             display: flex;
             text-align: center;
             align-items: center;
+            flex-shrink: 0;
             flex-direction: column;
             justify-content: center;
-            border: 1px solid #e5e7eb;
 
             // 日期文本 - 短规则
             .index-news__list-date-text {
@@ -546,30 +567,30 @@ const modules = [Autoplay, Pagination]
 
             // 标题 - 中等规则
             .index-news__list-item-title {
-              margin: 0 0 11px 0;
-              font-size: 19px;
               color: #1f2937;
+              margin: 0 0 11px 0;
+              display: -webkit-box;
+              overflow: hidden;
+              font-size: 19px;
+              line-clamp: 1;
+              transition: all 0.3s ease;
               font-weight: 600;
               line-height: 1.4;
-              transition: all 0.3s ease;
-              display: -webkit-box;
-              -webkit-line-clamp: 1;
-              line-clamp: 1;
               -webkit-box-orient: vertical;
-              overflow: hidden;
+              -webkit-line-clamp: 1;
             }
 
             // 描述 - 中等规则
             .index-news__list-item-description {
-              margin: 0;
-              font-size: 16px;
               color: #9ca3af;
-              line-height: 1.4;
+              margin: 0;
               display: -webkit-box;
-              -webkit-line-clamp: 2;
-              line-clamp: 2;
-              -webkit-box-orient: vertical;
               overflow: hidden;
+              font-size: 16px;
+              line-clamp: 2;
+              line-height: 1.4;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
             }
           }
         }
@@ -577,19 +598,19 @@ const modules = [Autoplay, Pagination]
 
       // 查看更多区域 - 短规则
       .index-news__view-more {
-        display: flex;
-        margin-top: auto;
-        position: absolute;
-        bottom: -40px;
         left: 0;
+        bottom: -40px;
+        display: flex;
+        position: absolute;
+        margin-top: auto;
 
         // 查看更多按钮 - 中等规则
         .index-news__view-more-btn {
           color: #108cf0;
           font-size: 19px;
+          transition: all 0.3s ease;
           font-weight: 500;
           text-decoration: none;
-          transition: all 0.3s ease;
 
           &:hover {
             color: #0872b8;
@@ -606,9 +627,9 @@ const modules = [Autoplay, Pagination]
     left: 0;
     right: 0;
     bottom: 0;
+    display: flex;
     z-index: 100;
     position: absolute;
-    display: flex;
     align-items: center;
     justify-content: center;
     background-color: rgba(255, 255, 255, 0.7);
@@ -618,17 +639,17 @@ const modules = [Autoplay, Pagination]
       gap: 16px;
       display: flex;
       align-items: center;
-      justify-content: center;
       flex-direction: column;
+      justify-content: center;
 
       // 加载旋转器 - 短规则
       .index-news__loading-spinner {
         width: 54px;
-        height: 54px;
-        border-radius: 50%;
         border: 4px solid #e5e7eb;
-        border-top-color: #108cf0;
+        height: 54px;
         animation: spin 1s linear infinite;
+        border-radius: 50%;
+        border-top-color: #108cf0;
       }
 
       // 加载文本 - 短规则

@@ -1,13 +1,3 @@
-<template>
-  <nav class="tabs">
-    <div class="tabs-container">
-      <div v-for="item in list" :key="item.value" class="tabs-item" :class="{ active: modelValue === item.value }" @click="handleTabClick(item.value)">
-        {{ item.title }}
-      </div>
-    </div>
-  </nav>
-</template>
-
 <script setup lang="ts">
 /**
  * Tab 列表项数据接口
@@ -34,8 +24,8 @@ interface Props {
  * @event update:modelValue - 当用户点击tab时触发，用于 v-model 双向绑定
  */
 interface Emits {
-  change: [value: string]
-  "update:modelValue": [value: string]
+  'change': [value: string]
+  'update:modelValue': [value: string]
 }
 
 // 定义props和emits
@@ -47,11 +37,21 @@ const emit = defineEmits<Emits>()
  * 触发 update:modelValue 事件，用于 v-model 双向绑定
  * @param value - 被点击的tab值
  */
-const handleTabClick = (value: string) => {
-  emit("update:modelValue", value)
-  emit("change", value)
+function handleTabClick(value: string) {
+  emit('update:modelValue', value)
+  emit('change', value)
 }
 </script>
+
+<template>
+  <nav class="tabs">
+    <div class="tabs-container">
+      <div v-for="item in list" :key="item.value" class="tabs-item" :class="{ active: modelValue === item.value }" @click="handleTabClick(item.value)">
+        {{ item.title }}
+      </div>
+    </div>
+  </nav>
+</template>
 
 <style scoped lang="scss">
 /* 标签导航栏样式 */
@@ -60,12 +60,12 @@ const handleTabClick = (value: string) => {
   left: 0;
   right: 0;
   width: 100%;
+  padding: 0 250px;
   z-index: 100;
   position: sticky;
-  padding: 0 250px;
-  background-color: white;
   border-top: 1px solid #f0f0f0;
   border-bottom: 1px solid #f0f0f0;
+  background-color: white;
 
   .tabs-container {
     gap: 60px;
@@ -76,15 +76,15 @@ const handleTabClick = (value: string) => {
 
   /* 标签项样式 */
   .tabs-item {
-    height: 60px;
-    cursor: pointer;
-    font-size: 16px;
     color: #666;
-    position: relative;
-    transition: all 0.3s ease;
-    white-space: nowrap;
+    cursor: pointer;
+    height: 60px;
     display: inline-flex;
+    position: relative;
+    font-size: 16px;
+    transition: all 0.3s ease;
     align-items: center;
+    white-space: nowrap;
 
     &:hover {
       color: #0066ff;
@@ -96,12 +96,12 @@ const handleTabClick = (value: string) => {
       font-weight: 600;
 
       &::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
         left: 0;
         width: 100%;
+        bottom: 0;
         height: 3px;
+        content: '';
+        position: absolute;
         background: linear-gradient(90deg, #0066ff, #00a8ff);
         border-radius: 2px 2px 0 0;
       }

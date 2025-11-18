@@ -29,18 +29,18 @@ import zzjg from '~/assets/images/zzjg.png'
 /* 组织机构区块样式 */
 .section {
   width: 100%;
-  padding: 80px 200px;
-  scroll-margin-top: 60px;
-  background-color: #ffffff;
   display: flex;
+  padding: 80px 200px;
   align-items: center;
   justify-content: center;
+  background-color: #ffffff;
+  scroll-margin-top: 60px;
 
   &__container {
+    gap: 32px;
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 32px;
   }
 
   &__header {
@@ -57,28 +57,28 @@ import zzjg from '~/assets/images/zzjg.png'
   &__title-en {
     color: #d8d8d8;
     font-size: 24px;
-    line-height: 1.2;
     font-weight: bold;
+    line-height: 1.2;
     margin-bottom: 10px;
     text-transform: uppercase;
   }
 
   &__title-cn {
-    margin: 0 0 20px 0;
     color: #333;
+    margin: 0 0 20px 0;
     font-size: 24px;
     font-weight: bold;
   }
 
   &__content {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 
     img {
-      max-width: 100%;
       height: auto;
       display: block;
+      max-width: 100%;
     }
   }
 }

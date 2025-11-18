@@ -1,10 +1,10 @@
-import mockNews from "../mock/news"
-import statesHook from "alova/vue"
-import { createAlova } from "alova"
-import { axiosRequestAdapter } from "@alova/adapter-axios"
-import { createAlovaMockAdapter } from "@alova/mock"
+import { createAlova } from 'alova'
+import { axiosRequestAdapter } from '@alova/adapter-axios'
+import { createAlovaMockAdapter } from '@alova/mock'
+import mockNews from '../mock/news'
+import statesHook from 'alova/vue'
 
-const mockAdapter = createAlovaMockAdapter([mockNews /** ... */], {
+const mockAdapter = createAlovaMockAdapter([mockNews], {
   // 全局控制是否启用mock接口，默认为true
   enable: true,
   // 非模拟请求适配器，用于未匹配mock接口时发送请求
@@ -31,8 +31,8 @@ const mockAdapter = createAlovaMockAdapter([mockNews /** ... */], {
  * 开发和生产环境都使用相对路径 /api/
  * 由Nitro服务器通过devProxy(开发)和routeRules(生产)代理处理
  */
-const getApiBaseURL = () => {
-  return "/api/"
+function getApiBaseURL() {
+  return '/api/'
 }
 
 const Http = createAlova({
@@ -45,7 +45,8 @@ const Http = createAlova({
     onSuccess: async (response) => {
       if (response.status === 200) {
         return response.data
-      } else {
+      }
+      else {
         const status = {
           400: `${response.status} 请求出现语法错误`,
           401: `${response.status} 用户未授权`,
@@ -66,7 +67,6 @@ const Http = createAlova({
       }
     },
     onError: (error, method) => {
-      console.log("🚀 ~ error:", error)
       const message = `[${method.type}] - [${method.url}] - ${error.message}`
       // ElMessage.error(message)
       throw new Error(message)

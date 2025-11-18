@@ -1,11 +1,5 @@
-<template>
-  <div class="description" :style="{ backgroundImage: image ? `url(${image})` : 'none' }">
-    <h1 class="description-text">{{ text }}</h1>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { withDefaults } from "vue"
+import { withDefaults } from 'vue'
 
 /**
  * 描述组件的属性接口
@@ -19,10 +13,18 @@ interface Props {
  * 定义组件属性及默认值
  */
 withDefaults(defineProps<Props>(), {
-  text: "四川华电泸定水电有限公司",
+  text: '四川华电泸定水电有限公司',
   image: undefined,
 })
 </script>
+
+<template>
+  <div class="description" :style="{ backgroundImage: image ? `url(${image})` : 'none' }">
+    <h1 class="description-text">
+      {{ text }}
+    </h1>
+  </div>
+</template>
 
 <style scoped lang="scss">
 /**
@@ -32,13 +34,13 @@ withDefaults(defineProps<Props>(), {
   width: 100%;
   height: 250px;
   display: flex;
-  position: relative;
   overflow: hidden;
+  position: relative;
   align-items: center;
-  justify-content: center;
   background-size: 100% 100%;
-  background-position: center;
+  justify-content: center;
   background-repeat: no-repeat;
+  background-position: center;
 
   /* 遮罩层 */
   &::before {
@@ -46,8 +48,8 @@ withDefaults(defineProps<Props>(), {
     left: 0;
     right: 0;
     bottom: 0;
+    content: '';
     z-index: 1;
-    content: "";
     position: absolute;
     // background-color: rgba(0, 0, 0, 0.3);
   }
@@ -56,13 +58,13 @@ withDefaults(defineProps<Props>(), {
   &-text {
     top: 80px;
     left: 160px;
+    color: white;
     margin: 0;
     z-index: 2;
-    color: white;
+    position: absolute;
     font-size: 32px;
     font-weight: bold;
     line-height: 1.4;
-    position: absolute;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   }
 

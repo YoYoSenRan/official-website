@@ -1,7 +1,7 @@
-import { defineStore } from "pinia"
-import { headerMuneList } from "~/api"
+import { defineStore } from 'pinia'
+import { headerMuneList } from '~/api'
 
-export const useMenuStore = defineStore("menu", {
+export const useMenuStore = defineStore('menu', {
   state: () => ({
     news: [] as any[],
   }),
@@ -14,7 +14,7 @@ export const useMenuStore = defineStore("menu", {
     },
 
     async fetchNewsList(params?: any) {
-      this.news = await headerMuneList({ alias: "xinwenzhongxin", ...params })
+      this.news = await headerMuneList({ alias: 'xinwenzhongxin', ...params })
     },
   },
 })

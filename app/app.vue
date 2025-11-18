@@ -1,3 +1,13 @@
+<script setup lang="ts">
+import { useMenuStore } from '~/store/menu'
+
+const menuStore = useMenuStore()
+
+onMounted(() => {
+  menuStore.init()
+})
+</script>
+
 <template>
   <NuxtRouteAnnouncer />
   <NuxtLoadingIndicator color="var(--color-brand)" :height="2" />
@@ -7,16 +17,6 @@
     </NuxtLayout>
   </UApp>
 </template>
-
-<script setup lang="ts">
-import { useMenuStore } from "~/store/menu"
-
-const menuStore = useMenuStore()
-
-onMounted(() => {
-  menuStore.init()
-})
-</script>
 
 <style lang="scss" scoped>
 :global(body) {

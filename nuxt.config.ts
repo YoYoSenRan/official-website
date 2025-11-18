@@ -1,33 +1,34 @@
-import tailwindcss from "@tailwindcss/vite"
+import process from 'node:process'
+import tailwindcss from '@tailwindcss/vite'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: "2025-07-15",
+  compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
   modules: [
-    "@nuxt/ui",
-    "@nuxt/eslint",
-    "@nuxt/image",
-    "@nuxt/scripts",
-    "@nuxt/test-utils",
-    "v-gsap-nuxt",
-    "@pinia/nuxt",
-    "nuxt-echarts",
+    '@nuxt/ui',
+    '@nuxt/eslint',
+    '@nuxt/image',
+    '@nuxt/scripts',
+    '@nuxt/test-utils',
+    'v-gsap-nuxt',
+    '@pinia/nuxt',
+    'nuxt-echarts',
   ],
 
   echarts: {
-    renderer: "canvas",
-    charts: ["LineChart"],
-    components: ["GridComponent", "TooltipComponent"],
+    renderer: 'canvas',
+    charts: ['LineChart'],
+    components: ['GridComponent', 'TooltipComponent'],
   },
 
-  css: ["~/assets/css/main.css"],
+  css: ['~/assets/css/main.css'],
 
   // 配置不同环境的API地址
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || "http://2444450wnth3.vicp.fun",
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://2444450wnth3.vicp.fun',
     },
   },
   ui: {
@@ -48,14 +49,14 @@ export default defineNuxtConfig({
   },
 
   pages: {
-    pattern: ["**/*.vue", "!**/*.spec.*", "!components/**"],
+    pattern: ['**/*.vue', '!**/*.spec.*', '!components/**'],
   },
 
   postcss: {
     plugins: {
-      "postcss-pxtorem": {
+      'postcss-pxtorem': {
         rootValue: 16, // 基准值：1rem = 16px
-        propList: ["*"], // 哪些属性需要转换
+        propList: ['*'], // 哪些属性需要转换
         minPixelValue: 2, // 小于2px的值不转换（防止边框问题）
         mediaQuery: true, // 媒体查询里的px也转换
         selectorBlackList: [], // 哪些选择器不应用转换
@@ -66,9 +67,9 @@ export default defineNuxtConfig({
   components: {
     dirs: [
       {
-        path: "~/components",
-        extensions: [".vue", ".ts"],
-        pattern: "**/index.{vue,ts}",
+        path: '~/components',
+        extensions: ['.vue', '.ts'],
+        pattern: '**/index.{vue,ts}',
         pathPrefix: false,
       },
     ],
@@ -78,22 +79,22 @@ export default defineNuxtConfig({
   nitro: {
     // 开发环境代理配置
     devProxy: {
-      "/api": {
-        target: "http://2444450wnth3.vicp.fun/api",
+      '/api': {
+        target: 'http://2444450wnth3.vicp.fun/api',
         changeOrigin: true,
         prependPath: true,
       },
     },
     // 生产环境代理配置 - 解决部署后的CORS问题
     routeRules: {
-      "/api/**": {
-        proxy: "http://2444450wnth3.vicp.fun/api/**",
+      '/api/**': {
+        proxy: 'http://2444450wnth3.vicp.fun/api/**',
       },
-      "/uploads/**": {
-        proxy: "http://2444450wnth3.vicp.fun/api/**",
+      '/uploads/**': {
+        proxy: 'http://2444450wnth3.vicp.fun/api/**',
       },
       // 动态路由设置为 SSR 模式（不预渲染，而是动态渲染）
-      "/news/detail/**": {
+      '/news/detail/**': {
         swr: 3600, // 一小时服务端缓存
       },
     },
@@ -103,10 +104,10 @@ export default defineNuxtConfig({
       crawlLinks: false,
       // 只预渲染首页和不依赖 API 的页面
       routes: [
-        "/", // 首页
+        '/', // 首页
       ],
       // 跳过需要 API 数据的页面（这些页面使用 SSR）
-      ignore: ["/news", "/news/detail/**", "/gsgk", "/xwzx"],
+      ignore: ['/news', '/news/detail/**', '/gsgk', '/xwzx'],
     },
   },
 })

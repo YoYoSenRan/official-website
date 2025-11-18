@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Banner from './components/Banner.vue'
-import FloatingAiButton from './components/FloatingAiButton.vue'
-import Generate from './components/Generate.vue'
 import News from './components/News.vue'
 import Staff from './components/Staff.vue'
 import Topic from './components/Topic.vue'
+import Banner from './components/Banner.vue'
+import Generate from './components/Generate.vue'
+import FloatingAiButton from './components/FloatingAiButton.vue'
 </script>
 
 <template>
@@ -36,10 +36,10 @@ import Topic from './components/Topic.vue'
 <style scoped lang="scss">
 // 主容器块
 .index-container {
-  position: relative;
   width: 100%;
   height: calc(100vh - 80px);
   display: flex;
+  position: relative;
   flex-direction: column;
 
   .snap-container {

@@ -1,104 +1,104 @@
 export default function () {
-  return useState("menuData", () => {
+  return useState('menuData', () => {
     return [
       {
-        title: "首页",
-        route: "/",
+        title: '首页',
+        route: '/',
         child: [],
       },
       {
-        title: "公司概况",
-        route: "/gsgk#gsjj",
+        title: '公司概况',
+        route: '/gsgk#gsjj',
         child: [
           {
-            title: "公司简介",
-            route: "/gsgk#gsjj",
+            title: '公司简介',
+            route: '/gsgk#gsjj',
           },
           {
-            title: "领导班子",
-            route: "/gsgk#ldbz",
+            title: '领导班子',
+            route: '/gsgk#ldbz',
           },
           {
-            title: "组织机构",
-            route: "/gsgk#zzjg",
+            title: '组织机构',
+            route: '/gsgk#zzjg',
           },
           {
-            title: "发展历程",
-            route: "/gsgk#fzlc",
+            title: '发展历程',
+            route: '/gsgk#fzlc',
           },
         ],
       },
       {
-        title: "新闻中心",
-        route: "/xwzx?category=gsyw",
+        title: '新闻中心',
+        route: '/xwzx?category=gsyw',
         child: [
           {
-            title: "媒体聚焦",
-            route: "/xwzx?category=gsyw",
+            title: '媒体聚焦',
+            route: '/xwzx?category=gsyw',
           },
           {
-            title: "公司要闻",
-            route: "/xwzx?category=gsdt",
+            title: '公司要闻',
+            route: '/xwzx?category=gsdt',
           },
           {
-            title: "公司新闻",
-            route: "/xwzx?category=gsgg",
+            title: '公司新闻',
+            route: '/xwzx?category=gsgg',
           },
           {
-            title: "职工园地",
-            route: "/xwzx?category=mtjj",
+            title: '职工园地',
+            route: '/xwzx?category=mtjj',
           },
           {
-            title: "图片新闻",
-            route: "/xwzx?category=ztjj",
+            title: '图片新闻',
+            route: '/xwzx?category=ztjj',
           },
         ],
       },
       {
-        title: "企业文化",
-        route: "/qywh/index",
+        title: '企业文化',
+        route: '/qywh/index',
         child: [
           {
-            title: "集团公司",
-            route: "/qywh/index",
+            title: '集团公司',
+            route: '/qywh/index',
           },
           {
-            title: "四川公司",
-            route: "/qywh/index",
+            title: '四川公司',
+            route: '/qywh/index',
           },
           {
-            title: "泸定公司",
-            route: "/qywh/index",
+            title: '泸定公司',
+            route: '/qywh/index',
           },
         ],
       },
       {
-        title: "公告通知",
-        route: "/ggtz/cwgk",
+        title: '公告通知',
+        route: '/ggtz/cwgk',
         child: [
           {
-            title: "厂务公开",
-            route: "/ggtz/cwgk",
+            title: '厂务公开',
+            route: '/ggtz/cwgk',
           },
           {
-            title: "工会团青",
-            route: "/ggtz/ghtq",
+            title: '工会团青',
+            route: '/ggtz/ghtq',
           },
           {
-            title: "纪检监察",
-            route: "/ggtz/jjjc",
+            title: '纪检监察',
+            route: '/ggtz/jjjc',
           },
           {
-            title: "人力资源",
-            route: "/ggtz/rlzy",
+            title: '人力资源',
+            route: '/ggtz/rlzy',
           },
           {
-            title: "日常通知",
-            route: "/ggtz/rctz",
+            title: '日常通知',
+            route: '/ggtz/rctz',
           },
           {
-            title: "党务公开",
-            route: "/ggtz/dwgk",
+            title: '党务公开',
+            route: '/ggtz/dwgk',
           },
         ],
       },

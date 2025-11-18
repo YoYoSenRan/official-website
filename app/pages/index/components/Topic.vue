@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Autoplay } from 'swiper/modules'
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { computed, onMounted, ref } from 'vue'
 import { blockItem } from '~/api'
 import { buildFullUrl } from '~/utils/utils'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { ref, computed, onMounted } from 'vue'
 import 'swiper/css'
 
 const topicList = ref<any[]>([])
@@ -90,16 +90,16 @@ onMounted(() => {
   width: 100%;
   height: 420px;
   display: flex;
-  padding-top: 60px;
   background: #efefef;
+  padding-top: 60px;
 }
 
 // 块容器 - 主容器
 .index-topic {
   gap: 15px;
   width: 100%;
-  padding: 0 160px;
   display: flex;
+  padding: 0 160px;
   flex-direction: column;
 
   // 顶部区域
@@ -118,8 +118,8 @@ onMounted(() => {
         .index-topic__title-en {
           color: #d8d8d8;
           font-size: 27px;
-          line-height: 0;
           font-weight: bold;
+          line-height: 0;
           margin-bottom: 13px;
         }
 
@@ -134,17 +134,17 @@ onMounted(() => {
   }
 
   .index-topic__bottom {
-    margin-top: 50px;
     position: relative;
+    margin-top: 50px;
     .index-topic__swiper {
       width: 100%;
       height: 122px;
     }
     .index-topic__slide {
       width: 100%;
+      cursor: pointer;
       height: 122px;
       overflow: hidden;
-      cursor: pointer;
       img {
         width: 100%;
         height: 100%;

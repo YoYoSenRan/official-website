@@ -1,14 +1,3 @@
-<template>
-  <nav class="anchor-nav">
-    <div class="anchor-nav-container">
-      <!-- 循环渲染每个锚点tab项 -->
-      <button v-for="anchor in anchors" :key="anchor.id" class="anchor-tab" :class="{ active: activeAnchor === anchor.id }" @click="handleTabClick(anchor.id)">
-        {{ anchor.title }}
-      </button>
-    </div>
-  </nav>
-</template>
-
 <script setup lang="ts">
 /**
  * 锚点数据接口
@@ -47,25 +36,36 @@ const emit = defineEmits<Emits>()
  * 触发change事件，将选中的锚点id传递给父组件
  * @param anchorId - 被点击的锚点id
  */
-const handleTabClick = (anchorId: string) => {
+function handleTabClick(anchorId: string) {
   // 触发change事件，父组件接收并执行scrollToAnchor
-  emit("change", anchorId)
+  emit('change', anchorId)
 }
 </script>
+
+<template>
+  <nav class="anchor-nav">
+    <div class="anchor-nav-container">
+      <!-- 循环渲染每个锚点tab项 -->
+      <button v-for="anchor in anchors" :key="anchor.id" class="anchor-tab" :class="{ active: activeAnchor === anchor.id }" @click="handleTabClick(anchor.id)">
+        {{ anchor.title }}
+      </button>
+    </div>
+  </nav>
+</template>
 
 <style scoped lang="scss">
 /* 锚点导航栏样式 */
 .anchor-nav {
-  position: sticky;
   top: 80px;
   left: 0;
   right: 0;
   width: 100%;
-  z-index: 10;
   padding: 0 250px;
-  background-color: white;
+  z-index: 10;
+  position: sticky;
   border-top: 1px solid #f0f0f0;
   border-bottom: 1px solid #f0f0f0;
+  background-color: white;
 
   .anchor-nav-container {
     gap: 60px;
@@ -76,17 +76,17 @@ const handleTabClick = (anchorId: string) => {
 
   /* 锚点tab项样式 */
   .anchor-tab {
-    height: 60px;
-    border: none;
-    padding: 0;
-    background: none;
-    cursor: pointer;
-    font-size: 16px;
     color: #666;
+    border: none;
+    cursor: pointer;
+    height: 60px;
+    display: inline-block;
+    padding: 0;
     position: relative;
+    font-size: 16px;
+    background: none;
     transition: all 0.3s ease;
     white-space: nowrap;
-    display: inline-block;
 
     &:hover {
       color: #0066ff;
@@ -98,12 +98,12 @@ const handleTabClick = (anchorId: string) => {
       font-weight: 600;
 
       &::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
         left: 0;
         width: 100%;
+        bottom: 0;
         height: 3px;
+        content: '';
+        position: absolute;
         background: linear-gradient(90deg, #0066ff, #00a8ff);
         border-radius: 2px 2px 0 0;
       }
@@ -115,8 +115,8 @@ const handleTabClick = (anchorId: string) => {
 @media (max-width: 768px) {
   .anchor-nav {
     .anchor-nav-container {
-      height: 50px;
       gap: 0;
+      height: 50px;
       overflow-x: auto;
       scroll-behavior: smooth;
 
@@ -129,8 +129,8 @@ const handleTabClick = (anchorId: string) => {
     }
 
     .anchor-tab {
-      padding: 0 16px;
       height: 50px;
+      padding: 0 16px;
       font-size: 14px;
     }
   }

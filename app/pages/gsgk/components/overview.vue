@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
-import overviewBg from '~/assets/images/overview-top-bg.webp'
+import { ref, onMounted, onUnmounted } from 'vue'
 import image1 from '~/assets/images/swiper/swiper-1.jpg'
 import image2 from '~/assets/images/swiper/swiper-2.jpg'
 import image3 from '~/assets/images/swiper/swiper-3.jpg'
+import overviewBg from '~/assets/images/overview-top-bg.webp'
 
 // 数据定义
 interface OverviewItem {
@@ -180,20 +180,20 @@ onUnmounted(() => {
   &__top-bg {
     top: 230px;
     right: 0;
-    z-index: 0;
     width: 60%;
     height: auto;
+    z-index: 0;
     position: absolute;
     pointer-events: none;
   }
 
   /* 包装器：两列式布局容器 */
   &__wrapper {
-    display: flex;
-    align-items: flex-start;
     gap: 60px;
-    position: relative;
+    display: flex;
     z-index: 1;
+    position: relative;
+    align-items: flex-start;
   }
 
   /* 左侧图片区域 */
@@ -203,31 +203,31 @@ onUnmounted(() => {
     min-width: 0;
 
     &::before {
-      content: '';
-      position: absolute;
-      pointer-events: none;
       top: -30px;
       right: -30px;
       width: 100px;
       height: 15px;
+      content: '';
+      position: absolute;
       background: linear-gradient(to left, #0066ff, rgba(0, 102, 255, 0));
+      pointer-events: none;
     }
 
     &::after {
-      content: '';
-      position: absolute;
-      pointer-events: none;
       top: -30px;
       right: -30px;
       width: 15px;
       height: 100px;
+      content: '';
+      position: absolute;
       background: linear-gradient(to bottom, #0066ff, rgba(0, 102, 255, 0));
+      pointer-events: none;
     }
 
     img {
-      display: block;
       width: 100%;
       height: auto;
+      display: block;
     }
   }
 
@@ -246,16 +246,16 @@ onUnmounted(() => {
 
   /* 区块标题 */
   &__title {
-    margin: 0 0 20px 0;
     color: #333;
+    margin: 0 0 20px 0;
     font-size: 24px;
     font-weight: bold;
   }
 
   /* 描述文本 */
   &__description {
-    margin: 0;
     color: #666;
+    margin: 0;
     font-size: 14px;
     line-height: 1.8;
   }
@@ -264,9 +264,9 @@ onUnmounted(() => {
 
   /* 数据指标容器 */
   &__metrics {
+    gap: 30px;
     display: flex;
     justify-content: space-between;
-    gap: 30px;
   }
 
   /* 单个指标项 */
@@ -277,10 +277,10 @@ onUnmounted(() => {
 
   /* 指标数值 */
   &__metric-value {
-    margin-bottom: 10px;
     color: #0066ff;
     font-size: 36px;
     font-weight: bold;
+    margin-bottom: 10px;
   }
 
   /* 指标标签 */
@@ -297,13 +297,13 @@ onUnmounted(() => {
     position: relative;
 
     &::before {
-      content: '';
-      position: absolute;
       top: 0;
       left: 0;
-      z-index: 1;
       width: 100%;
       height: 100%;
+      content: '';
+      z-index: 1;
+      position: absolute;
       pointer-events: none;
       background-color: rgba(0, 102, 255, 0.4);
     }
@@ -312,14 +312,14 @@ onUnmounted(() => {
   /* 卡片包装器 */
   &__cards-wrapper {
     gap: 40px;
-    display: flex;
     margin: 0 -100px;
+    display: flex;
     padding: 0 100px;
     overflow: hidden;
     position: relative;
+    background: url('@/assets/images/swiper/swiper-1.jpg') center / cover no-repeat;
     align-items: center;
     justify-content: space-between;
-    background: url('@/assets/images/swiper/swiper-1.jpg') center / cover no-repeat;
     background-attachment: fixed;
   }
 
@@ -327,20 +327,20 @@ onUnmounted(() => {
   &__cards {
     flex: 1;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
     border-left: 1px solid #ffffff;
     border-right: 1px solid #ffffff;
+    grid-template-columns: repeat(3, 1fr);
   }
 
   /* 内容卡片 */
   &__card {
-    z-index: 2;
-    height: 400px;
     cursor: pointer;
+    height: 400px;
+    z-index: 2;
+    background: rgba(0, 102, 255, 0.15);
     transition: all 0.3s ease;
     border-left: 1px solid #ffffff;
     border-right: 1px solid #ffffff;
-    background: rgba(0, 102, 255, 0.15);
 
     &:first-child,
     &:last-child {
@@ -360,12 +360,12 @@ onUnmounted(() => {
 
   /* 卡片顶部 */
   &__card-top {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     height: 100%;
+    display: flex;
     padding: 30px;
     position: relative;
+    flex-direction: column;
+    justify-content: center;
   }
 
   /* 卡片顶部数字 */
@@ -385,36 +385,36 @@ onUnmounted(() => {
 
   /* 卡片底部 */
   &__card-bottom {
-    display: flex;
-    flex-direction: column;
     height: 100%;
+    display: flex;
     position: relative;
+    flex-direction: column;
   }
 
   /* 卡片内容区 */
   &__card-content {
+    height: 50%;
     display: flex;
+    padding: 30px;
     flex-direction: column;
     justify-content: center;
-    height: 50%;
-    padding: 30px;
     background-color: $primary-color;
   }
 
   /* 卡片内容数字 */
   &__card-content-number {
-    margin-bottom: 15px;
     color: #fff;
     font-size: 20px;
     font-weight: bold;
+    margin-bottom: 15px;
   }
 
   /* 卡片内容标题 */
   &__card-content-title {
-    margin-bottom: 15px;
     color: #fff;
     font-size: 24px;
     font-weight: bold;
+    margin-bottom: 15px;
   }
 
   /* 卡片内容描述 */

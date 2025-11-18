@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 const now = ref('')
 const labels = ref<string[]>([])
@@ -199,14 +199,14 @@ onMounted(() => {
   width: 100%;
   height: 480px;
   display: flex;
-  padding-bottom: 45px;
   background: #efefef url('~/assets/images/yzj.png') no-repeat center / cover;
+  padding-bottom: 45px;
 
   &__layout {
     gap: 20px;
     width: 100%;
-    padding: 40px 160px;
     display: flex;
+    padding: 40px 160px;
     overflow: hidden;
     flex-direction: column;
   }
@@ -225,16 +225,16 @@ onMounted(() => {
   &__title-en {
     color: #d8d8d8;
     font-size: 27px;
-    line-height: 1.2;
     font-weight: bold;
+    line-height: 1.2;
     margin-bottom: 13px;
   }
 
   &__title-cn {
     color: #1f2937;
     font-size: 32px;
-    line-height: 1.2;
     font-weight: bold;
+    line-height: 1.2;
   }
 
   &__timestamp {
@@ -243,8 +243,8 @@ onMounted(() => {
 
   &__body {
     gap: 40px;
-    display: flex;
     height: 427px;
+    display: flex;
     align-items: stretch;
   }
 
@@ -254,23 +254,23 @@ onMounted(() => {
   }
 
   &__tabs {
-    display: flex;
     gap: 10px;
+    display: flex;
     margin-bottom: 10px;
   }
 
   &__tab {
-    box-sizing: border-box;
-    height: 30px;
+    color: #128cf0;
+    border: 1px solid #128cf0;
     cursor: pointer;
+    height: 30px;
+    display: inline-flex;
     padding: 0 12px;
     font-size: 16px;
-    color: #128cf0;
     background: #ffffff;
-    border: 1px solid #128cf0;
-    border-radius: 4px;
-    display: inline-flex;
+    box-sizing: border-box;
     align-items: center;
+    border-radius: 4px;
     justify-content: center;
 
     &--active,
@@ -302,11 +302,11 @@ onMounted(() => {
   }
 
   &__metric-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
     gap: 10px;
+    display: flex;
+    align-items: flex-start;
     margin-bottom: 18px;
+    flex-direction: column;
   }
 
   &__metric-label {
@@ -324,33 +324,33 @@ onMounted(() => {
     display: grid;
 
     &--two {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
       column-gap: 18px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     &--three {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
       column-gap: 12px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 
   &__metric {
     /* 指标格子上下排布并居中，形成独立白色卡片 */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     gap: 6px;
+    display: flex;
     padding: 12px 8px;
     background: #ffffff;
-    border-radius: 6px;
-    text-align: center;
     min-height: 86px;
+    text-align: center;
+    align-items: center;
+    border-radius: 6px;
+    flex-direction: column;
+    justify-content: center;
   }
 
   &__metric-value {
-    display: flex;
     gap: 4px;
+    display: flex;
     align-items: flex-end;
   }
 

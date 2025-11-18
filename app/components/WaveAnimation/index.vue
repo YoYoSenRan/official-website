@@ -1,12 +1,6 @@
-<template>
-  <div class="wave-animation">
-    <canvas ref="canvasRef"></canvas>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue"
-import * as THREE from "three"
+import { ref, onMounted, onUnmounted } from 'vue'
+import * as THREE from 'three'
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 let scene: THREE.Scene | null = null
@@ -17,11 +11,12 @@ let particles: THREE.Points | null = null
 
 onMounted(() => {
   const canvas = canvasRef.value
-  if (!canvas) return
+  if (!canvas)
+    return
 
   // 初始化Scene
   scene = new THREE.Scene()
-  scene.background = new THREE.Color(0xffffff)
+  scene.background = new THREE.Color(0xFFFFFF)
 
   // 初始化Camera
   const width = canvas.clientWidth
@@ -34,7 +29,7 @@ onMounted(() => {
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
   renderer.setSize(width, height)
   renderer.setPixelRatio(window.devicePixelRatio)
-  renderer.setClearColor(0xffffff, 0)
+  renderer.setClearColor(0xFFFFFF, 0)
 
   // 创建粒子几何体 - 生成网格状的粒子排列
   const particleCountX = 70
@@ -69,12 +64,12 @@ onMounted(() => {
     }
   }
 
-  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
-  geometry.setAttribute("scale", new THREE.BufferAttribute(scales, 1))
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+  geometry.setAttribute('scale', new THREE.BufferAttribute(scales, 1))
 
   // 创建材质
   const material = new THREE.PointsMaterial({
-    color: 0x108cf0,
+    color: 0x108CF0,
     size: 1.2,
     sizeAttenuation: true,
     transparent: true,
@@ -92,7 +87,7 @@ onMounted(() => {
     time += 0.012 // 约60fps，速度比之前快一些
 
     // 更新粒子位置 - 模拟海浪效果
-    const posAttr = geometry.getAttribute("position") as THREE.BufferAttribute
+    const posAttr = geometry.getAttribute('position') as THREE.BufferAttribute
     const pos = posAttr.array as Float32Array
 
     for (let y = 0; y < particleCountY; y++) {
@@ -149,10 +144,10 @@ onMounted(() => {
     renderer?.setSize(newWidth, newHeight)
   }
 
-  window.addEventListener("resize", handleResize)
+  window.addEventListener('resize', handleResize)
 
   onUnmounted(() => {
-    window.removeEventListener("resize", handleResize)
+    window.removeEventListener('resize', handleResize)
     if (animationId) {
       cancelAnimationFrame(animationId)
     }
@@ -163,6 +158,12 @@ onMounted(() => {
 })
 </script>
 
+<template>
+  <div class="wave-animation">
+    <canvas ref="canvasRef" />
+  </div>
+</template>
+
 <style scoped lang="scss">
 .wave-animation {
   width: 100%;
@@ -172,9 +173,9 @@ onMounted(() => {
   border-radius: 0 0 8px 8px;
 
   canvas {
-    display: block;
     width: 100%;
     height: 100%;
+    display: block;
   }
 }
 </style>

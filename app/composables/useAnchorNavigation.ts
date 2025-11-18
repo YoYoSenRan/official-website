@@ -6,15 +6,15 @@
  * 3. 滚动时自动激活对应的tab
  * 4. 处理hash路由（#锚点）
  */
-import { ref, nextTick, onMounted, onUnmounted } from "vue"
-import { useRouter } from "#app"
+import { useRouter } from '#app'
+import { ref, nextTick, onMounted, onUnmounted } from 'vue'
 
 export function useAnchorNavigation() {
   // 当前激活的锚点id
-  const activeAnchor = ref<string>("")
+  const activeAnchor = ref<string>('')
 
   // 当前hash值，用于检测hash变化
-  const currentHash = ref<string>("")
+  const currentHash = ref<string>('')
 
   // 滚动监听的防抖计时器
   let scrollTimeout: ReturnType<typeof setTimeout> | null = null
@@ -54,12 +54,12 @@ export function useAnchorNavigation() {
    */
   const scrollToAnchor = (anchorId: string) => {
     // 特殊处理：公司简介滚动到顶部
-    if (anchorId === "gsjj") {
+    if (anchorId === 'gsjj') {
       window.scrollTo({
         top: 0,
-        behavior: "smooth",
+        behavior: 'smooth',
       })
-      window.history.pushState(null, "", `#${anchorId}`)
+      window.history.pushState(null, '', `#${anchorId}`)
       activeAnchor.value = anchorId
       return
     }
@@ -71,14 +71,14 @@ export function useAnchorNavigation() {
       const compensationHeight = getCompensationHeight()
       // 计算目标滚动位置，确保元素不被固定头部和tabs遮挡
       const targetPosition = element.getBoundingClientRect().top + window.scrollY - compensationHeight
-      
+
       window.scrollTo({
         top: Math.max(0, targetPosition),
-        behavior: "smooth",
+        behavior: 'smooth',
       })
-      
+
       // 更新URL中的hash
-      window.history.pushState(null, "", `#${anchorId}`)
+      window.history.pushState(null, '', `#${anchorId}`)
       // 立即更新激活状态
       activeAnchor.value = anchorId
     }
@@ -88,12 +88,12 @@ export function useAnchorNavigation() {
    * 获取所有设置了 data-anchor 属性的元素
    * @returns 所有锚点元素的数组
    */
-  const getAllAnchorElements = (): Array<{ id: string; element: HTMLElement }> => {
-    const anchors: Array<{ id: string; element: HTMLElement }> = []
-    const elements = document.querySelectorAll("[data-anchor]")
+  const getAllAnchorElements = (): Array<{ id: string, element: HTMLElement }> => {
+    const anchors: Array<{ id: string, element: HTMLElement }> = []
+    const elements = document.querySelectorAll('[data-anchor]')
 
     elements.forEach((element) => {
-      const anchorId = element.getAttribute("data-anchor")
+      const anchorId = element.getAttribute('data-anchor')
       if (anchorId && element instanceof HTMLElement) {
         anchors.push({ id: anchorId, element })
       }
@@ -118,9 +118,10 @@ export function useAnchorNavigation() {
 
       const allAnchors = getAllAnchorElements()
 
-      if (allAnchors.length === 0) return
+      if (allAnchors.length === 0)
+        return
 
-      let closestAnchor = ""
+      let closestAnchor = ''
       let closestDistance = Infinity
 
       // 遍历所有锚点区块，找到最接近视口的区块
@@ -148,7 +149,7 @@ export function useAnchorNavigation() {
    */
   const initAnchorNavigation = () => {
     // 添加全局滚动事件监听
-    window.addEventListener("scroll", handleScroll)
+    window.addEventListener('scroll', handleScroll)
 
     // 检查URL中是否有hash，如果有则滚动到对应位置
     const hash = window.location.hash.slice(1)
@@ -170,7 +171,7 @@ export function useAnchorNavigation() {
         })
       }
     }
-    window.addEventListener("hashchange", handleHashChange)
+    window.addEventListener('hashchange', handleHashChange)
 
     // 监听路由变化以处理NuxtLink的hash导航
     const unsubscribe = router.afterEach((to) => {
@@ -184,7 +185,7 @@ export function useAnchorNavigation() {
     })
 
     return () => {
-      window.removeEventListener("hashchange", handleHashChange)
+      window.removeEventListener('hashchange', handleHashChange)
       unsubscribe()
     }
   }
@@ -195,7 +196,7 @@ export function useAnchorNavigation() {
    */
   const cleanup = () => {
     // 移除滚动事件监听
-    window.removeEventListener("scroll", handleScroll)
+    window.removeEventListener('scroll', handleScroll)
     // 清除滚动防抖计时器
     if (scrollTimeout) {
       clearTimeout(scrollTimeout)

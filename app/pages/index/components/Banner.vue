@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Autoplay, Pagination } from 'swiper/modules'
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { onMounted, ref } from 'vue'
-import { rotatingBanner } from '~/api'
 import { buildFullUrl } from '~/utils/utils'
+import { ref, onMounted } from 'vue'
+import { rotatingBanner } from '~/api'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Autoplay, Pagination } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
@@ -95,14 +95,14 @@ defineExpose({
     }
 
     :deep(.swiper-pagination-bullet) {
+      gap: 6px;
       width: 40px;
       height: 4px;
-      gap: 6px;
       margin: 8px 0;
       opacity: 1;
+      transition: all 0.3s ease;
       border-radius: 2px;
       background-color: rgba(255, 255, 255, 0.6);
-      transition: all 0.3s ease;
     }
 
     :deep(.swiper-pagination-bullet-active) {
@@ -111,42 +111,42 @@ defineExpose({
     }
 
     .index-banner__content {
-      left: 0;
       top: 50%;
-      z-index: 10;
+      left: 0;
       color: #fff;
       opacity: 0;
       padding: 0 60px;
-      max-width: 600px;
+      z-index: 10;
       position: absolute;
-      transform: translateY(-50%);
       animation: slideInContent 0.8s ease-out 0.3s forwards;
+      max-width: 600px;
+      transform: translateY(-50%);
 
       .index-banner__label {
-        margin-bottom: 12px;
+        opacity: 0.9;
         font-size: 20px;
         font-weight: 500;
-        opacity: 0.9;
+        margin-bottom: 12px;
         letter-spacing: 0.5px;
       }
 
       .index-banner__title {
-        margin-top: 0;
-        margin-bottom: 16px;
-        padding-top: 2px;
         font-size: 56px;
+        border-top: 2px solid #fff;
+        margin-top: 0;
         font-weight: bold;
         line-height: 1.3;
-        white-space: nowrap;
-        border-top: 2px solid #fff;
+        padding-top: 2px;
         text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        white-space: nowrap;
+        margin-bottom: 16px;
       }
 
       .index-banner__description {
         margin: 0;
+        opacity: 0.95;
         font-size: 20px;
         font-weight: 500;
-        opacity: 0.95;
         letter-spacing: 0.5px;
       }
     }
@@ -157,11 +157,11 @@ defineExpose({
       left: 60px;
       right: auto;
       width: auto;
-      display: flex;
       height: fit-content;
+      display: flex;
+      transform: translateY(-50%);
       margin-top: 130px;
       align-items: flex-start;
-      transform: translateY(-50%);
     }
   }
 }

@@ -47,7 +47,7 @@
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
-    "@fonds/eslint-config": "^1.0.9",
+    "@fonds/eslint-config": "^1.0.10",
     "@types/mockjs": "^1.0.10",
     "@types/three": "^0.180.0",
     "@unocss/nuxt": "^66.5.4",

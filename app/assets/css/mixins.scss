@@ -15,28 +15,28 @@
 }
 
 @mixin button-base {
-  padding: $spacing-sm $spacing-md;
-  border-radius: $border-radius-md;
   border: none;
   cursor: pointer;
-  font-family: $font-family-base;
+  padding: $spacing-sm $spacing-md;
   font-size: $font-size-base;
   transition: $transition-fast;
-  
+  font-family: $font-family-base;
+  border-radius: $border-radius-md;
+
   &:hover {
     transform: translateY(-1px);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
 }
 
 @mixin card {
-  background: $background-color;
-  border-radius: $border-radius-lg;
-  box-shadow: $shadow-md;
   padding: $spacing-lg;
+  background: $background-color;
+  box-shadow: $shadow-md;
+  border-radius: $border-radius-lg;
 }
 
 // Responsive mixins

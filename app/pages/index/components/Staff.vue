@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
 import { blockItem } from '~/api'
 import { buildFullUrl } from '~/utils/utils'
+import { ref, onMounted } from 'vue'
 
 const items = ref<string[]>([])
 const isHovered = ref(false)
@@ -95,8 +95,8 @@ onMounted(() => {
 .index-staff {
   gap: 15px;
   width: 100%;
-  padding: 80px 160px;
   display: flex;
+  padding: 80px 160px;
   flex-direction: column;
   background-color: #fff;
 
@@ -116,8 +116,8 @@ onMounted(() => {
         .index-staff__title-en {
           color: #e5e5e5;
           font-size: 27px;
-          line-height: 0;
           font-weight: bold;
+          line-height: 0;
           margin-bottom: 13px;
         }
 
@@ -138,11 +138,11 @@ onMounted(() => {
     display: flex;
     position: relative;
     align-items: center;
-    justify-content: center;
     background-size: 90% 100%;
+    justify-content: center;
+    background-image: url('~/assets/images/bg_3d.png');
     background-repeat: no-repeat;
     background-position: center;
-    background-image: url('~/assets/images/bg_3d.png');
 
     // 轮播容器 - 中等规则
     .index-staff__carousel-container {
@@ -167,11 +167,11 @@ onMounted(() => {
           height: 100%;
           margin: auto;
           position: absolute;
+          animation-name: rotation;
           transform-style: preserve-3d;
           animation-duration: 30s;
-          animation-timing-function: linear;
           animation-iteration-count: infinite;
-          animation-name: rotation;
+          animation-timing-function: linear;
 
           // 暂停状态
           &.index-staff__carousel--paused {
@@ -182,9 +182,9 @@ onMounted(() => {
           .index-staff__carousel-item {
             top: 10px;
             left: 10px;
-            margin: 0;
             width: 333px;
             height: 227px;
+            margin: 0;
             display: block;
             overflow: hidden;
             position: absolute;
@@ -217,10 +217,10 @@ onMounted(() => {
             // 图片元素 - 中等规则
             .index-staff__carousel-img {
               width: 100%;
-              height: 100%;
               cursor: pointer;
-              transition: transform 0.3s ease;
+              height: 100%;
               object-fit: cover;
+              transition: transform 0.3s ease;
 
               &:hover {
                 transform: scale(1.1);

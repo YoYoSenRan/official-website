@@ -22,34 +22,34 @@ const { href, label } = props
 
 <style scoped lang="scss">
 .ai-fab {
-  position: fixed;
   right: 24px;
   bottom: 24px;
   z-index: 1000;
+  position: fixed;
 }
 .ai-fab__btn {
-  position: relative;
   gap: 6px;
-  padding: 4px;
-  padding-bottom: 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
   color: #108cf0;
-  border-radius: 9999px;
-  text-decoration: none;
+  display: inline-flex;
+  padding: 4px;
+  position: relative;
   background: #fff;
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.3);
+  align-items: center;
+  border-radius: 9999px;
+  flex-direction: column;
+  padding-bottom: 12px;
+  justify-content: flex-start;
+  text-decoration: none;
 }
 .ai-fab__icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   width: 30px;
   height: 30px;
-  border-radius: 50%;
+  display: inline-flex;
   overflow: hidden;
+  align-items: center;
+  border-radius: 50%;
+  justify-content: center;
 
   img {
     width: 100%;
@@ -58,28 +58,28 @@ const { href, label } = props
   }
 }
 .ai-fab__text {
-  margin-top: 0;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 6px;
-  line-height: 1;
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  white-space: nowrap;
-  display: inline-block;
-  background: linear-gradient(180deg, #0b8ee0 5%, #0b8ee0 45%, #14d6b5 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
   color: transparent;
+  display: inline-block;
+  font-size: 16px;
+  background: linear-gradient(180deg, #0b8ee0 5%, #0b8ee0 45%, #14d6b5 100%);
+  margin-top: 0;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  letter-spacing: 6px;
+  background-clip: text;
+  text-orientation: upright;
+  -webkit-background-clip: text;
 }
 .ai-fab__ai {
-  writing-mode: horizontal-tb;
-  text-orientation: initial;
-  white-space: nowrap;
-  direction: ltr;
   color: #0b8ee0;
+  direction: ltr;
   font-weight: 800;
+  white-space: nowrap;
+  writing-mode: horizontal-tb;
   margin-bottom: -6px;
+  text-orientation: initial;
 }
 @media (max-width: 768px) {
   .ai-fab {

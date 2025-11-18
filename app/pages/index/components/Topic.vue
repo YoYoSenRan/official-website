@@ -70,7 +70,7 @@ onMounted(() => {
         >
           <SwiperSlide v-for="item in topicList" :key="item.id">
             <div class="index-topic__slide">
-              <img src="https://picsum.photos/800/600" :alt="item.name || 'topic-item'">
+              <img :src="item.image" :alt="item.name || 'topic-item'">
             </div>
           </SwiperSlide>
         </Swiper>

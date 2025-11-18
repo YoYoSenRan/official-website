@@ -1,3 +1,93 @@
+<script setup lang="ts">
+import { onMounted, ref, watch } from 'vue'
+import { articlePageListByAlias } from '~/api'
+import footerBg from '~/assets/images/footer-bg.png'
+import qrcode from '~/assets/images/qrcode.webp'
+
+const mediaItems = ref<any[]>([])
+const mediaValue = ref('')
+const mediaData = ref<any[]>([])
+
+const networkItems = ref<any[]>([])
+const networkValue = ref('')
+const networkData = ref<any[]>([])
+
+const governmentItems = ref<any[]>([])
+const governmentValue = ref('')
+const governmentData = ref<any[]>([])
+
+const systemItems = ref<any[]>([])
+const systemValue = ref('')
+const systemData = ref<any[]>([])
+
+function openLink(url: string) {
+  if (url) {
+    window.open(url, '_blank')
+  }
+}
+
+function handleMediaChange() {
+  const item = mediaData.value.find((i: any) => (i.name || i.title) === mediaValue.value)
+  if (item?.description) {
+    openLink(item.description)
+  }
+}
+
+function handleNetworkChange() {
+  const item = networkData.value.find((i: any) => (i.name || i.title) === networkValue.value)
+  if (item?.description) {
+    openLink(item.description)
+  }
+}
+
+function handleGovernmentChange() {
+  const item = governmentData.value.find((i: any) => (i.name || i.title) === governmentValue.value)
+  if (item?.description) {
+    openLink(item.description)
+  }
+}
+
+function handleSystemChange() {
+  const item = systemData.value.find((i: any) => (i.name || i.title) === systemValue.value)
+  if (item?.description) {
+    openLink(item.description)
+  }
+}
+
+async function fetchLinkData() {
+  try {
+    const [media, network, government, system] = await Promise.all([
+      articlePageListByAlias({ alias: 'xinwenmeiti' }),
+      articlePageListByAlias({ alias: 'huadianwangqun' }),
+      articlePageListByAlias({ alias: 'zhenfujigou' }),
+      articlePageListByAlias({ alias: 'jituanwangqun' }),
+    ])
+
+    mediaData.value = media || []
+    networkData.value = network || []
+    governmentData.value = government || []
+    systemData.value = system || []
+
+    mediaItems.value = mediaData.value.map((item: any) => item.name || item.title)
+    networkItems.value = networkData.value.map((item: any) => item.name || item.title)
+    governmentItems.value = governmentData.value.map((item: any) => item.name || item.title)
+    systemItems.value = systemData.value.map((item: any) => item.name || item.title)
+  }
+  catch (error) {
+    console.error('Failed to fetch footer links:', error)
+  }
+}
+
+watch(mediaValue, handleMediaChange)
+watch(networkValue, handleNetworkChange)
+watch(governmentValue, handleGovernmentChange)
+watch(systemValue, handleSystemChange)
+
+onMounted(() => {
+  fetchLinkData()
+})
+</script>
+
 <template>
   <div class="footer">
     <!-- 背景 -->
@@ -30,100 +120,11 @@
 
       <!-- 二维码 -->
       <div class="footer__qrcode">
-        <img :src="qrcode" alt="QR Code" class="footer__qrcode-img" />
+        <img :src="qrcode" alt="QR Code" class="footer__qrcode-img">
       </div>
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, onMounted, watch } from "vue"
-import { articlePageListByAlias } from "~/api"
-import qrcode from "~/assets/images/qrcode.webp"
-import footerBg from "~/assets/images/footer-bg.png"
-
-const mediaItems = ref<any[]>([])
-const mediaValue = ref("")
-const mediaData = ref<any[]>([])
-
-const networkItems = ref<any[]>([])
-const networkValue = ref("")
-const networkData = ref<any[]>([])
-
-const governmentItems = ref<any[]>([])
-const governmentValue = ref("")
-const governmentData = ref<any[]>([])
-
-const systemItems = ref<any[]>([])
-const systemValue = ref("")
-const systemData = ref<any[]>([])
-
-const openLink = (url: string) => {
-  if (url) {
-    window.open(url, "_blank")
-  }
-}
-
-const handleMediaChange = () => {
-  const item = mediaData.value.find((i: any) => (i.name || i.title) === mediaValue.value)
-  if (item?.description) {
-    openLink(item.description)
-  }
-}
-
-const handleNetworkChange = () => {
-  const item = networkData.value.find((i: any) => (i.name || i.title) === networkValue.value)
-  if (item?.description) {
-    openLink(item.description)
-  }
-}
-
-const handleGovernmentChange = () => {
-  const item = governmentData.value.find((i: any) => (i.name || i.title) === governmentValue.value)
-  if (item?.description) {
-    openLink(item.description)
-  }
-}
-
-const handleSystemChange = () => {
-  const item = systemData.value.find((i: any) => (i.name || i.title) === systemValue.value)
-  if (item?.description) {
-    openLink(item.description)
-  }
-}
-
-const fetchLinkData = async () => {
-  try {
-    const [media, network, government, system] = await Promise.all([
-      articlePageListByAlias({ alias: "xinwenmeiti" }),
-      articlePageListByAlias({ alias: "huadianwangqun" }),
-      articlePageListByAlias({ alias: "zhenfujigou" }),
-      articlePageListByAlias({ alias: "jituanwangqun" }),
-    ])
-
-    mediaData.value = media || []
-    networkData.value = network || []
-    governmentData.value = government || []
-    systemData.value = system || []
-
-    mediaItems.value = mediaData.value.map((item: any) => item.name || item.title)
-    networkItems.value = networkData.value.map((item: any) => item.name || item.title)
-    governmentItems.value = governmentData.value.map((item: any) => item.name || item.title)
-    systemItems.value = systemData.value.map((item: any) => item.name || item.title)
-  } catch (error) {
-    console.error("Failed to fetch footer links:", error)
-  }
-}
-
-watch(mediaValue, handleMediaChange)
-watch(networkValue, handleNetworkChange)
-watch(governmentValue, handleGovernmentChange)
-watch(systemValue, handleSystemChange)
-
-onMounted(() => {
-  fetchLinkData()
-})
-</script>
 
 <style lang="scss" scoped>
 .footer {

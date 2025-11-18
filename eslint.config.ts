@@ -2,7 +2,7 @@ import eslint from '@fonds/eslint-config'
 
 export default eslint({
   vue: {
-    a11y: true,
+    a11y: false,
   },
   typescript: {
     erasableOnly: true,

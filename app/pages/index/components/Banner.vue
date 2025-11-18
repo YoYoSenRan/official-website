@@ -1,34 +1,11 @@
-<template>
-  <div class="index-banner">
-    <Swiper
-      :modules="modules"
-      :slides-per-view="1"
-      :loop="true"
-      :effect="'slide'"
-      :autoplay="{ delay: 5000, disableOnInteraction: false }"
-      :pagination="{ clickable: true }"
-      class="index-banner__swiper"
-    >
-      <SwiperSlide v-for="(item, index) in banners" :key="item.id || index">
-        <img :src="item.imageUrl" :alt="`banner-${index}`" class="index-banner__image" />
-        <div class="index-banner__content">
-          <div class="index-banner__label">{{ item.topText }}</div>
-          <h2 class="index-banner__title">{{ item.title }}</h2>
-          <p class="index-banner__description">{{ item.bottomText }}</p>
-        </div>
-      </SwiperSlide>
-    </Swiper>
-  </div>
-</template>
-
 <script setup lang="ts">
-import "swiper/css"
-import "swiper/css/pagination"
-import { ref, onMounted } from "vue"
-import { rotatingBanner } from "~/api"
-import { buildFullUrl } from "~/utils/utils"
-import { Swiper, SwiperSlide } from "swiper/vue"
-import { Autoplay, Pagination } from "swiper/modules"
+import { Autoplay, Pagination } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { onMounted, ref } from 'vue'
+import { rotatingBanner } from '~/api'
+import { buildFullUrl } from '~/utils/utils'
+import 'swiper/css'
+import 'swiper/css/pagination'
 
 const modules = [Autoplay, Pagination]
 
@@ -37,8 +14,8 @@ const banners = ref<any[]>([])
 /**
  * 获取轮播图数据
  */
-const fetchBanners = async (params?: any) => {
-  const data = await rotatingBanner({ alias: "shouyelunbotu", ...params })
+async function fetchBanners(params?: any) {
+  const data = await rotatingBanner({ alias: 'shouyelunbotu', ...params })
   banners.value = (data || []).map((item: any) => {
     return {
       ...item,
@@ -47,7 +24,7 @@ const fetchBanners = async (params?: any) => {
   })
 }
 
-const refresh = async (params?: any) => {
+async function refresh(params?: any) {
   await fetchBanners(params)
 }
 
@@ -59,6 +36,35 @@ defineExpose({
   refresh,
 })
 </script>
+
+<template>
+  <div class="index-banner">
+    <Swiper
+      :modules="modules"
+      :slides-per-view="1"
+      :loop="true"
+      effect="slide"
+      :autoplay="{ delay: 5000, disableOnInteraction: false }"
+      :pagination="{ clickable: true }"
+      class="index-banner__swiper"
+    >
+      <SwiperSlide v-for="(item, index) in banners" :key="item.id || index">
+        <img :src="item.imageUrl" :alt="`banner-${index}`" class="index-banner__image">
+        <div class="index-banner__content">
+          <div class="index-banner__label">
+            {{ item.topText }}
+          </div>
+          <h2 class="index-banner__title">
+            {{ item.title }}
+          </h2>
+          <p class="index-banner__description">
+            {{ item.bottomText }}
+          </p>
+        </div>
+      </SwiperSlide>
+    </Swiper>
+  </div>
+</template>
 
 <style scoped lang="scss">
 @keyframes slideInContent {

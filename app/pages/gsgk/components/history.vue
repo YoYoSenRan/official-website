@@ -1,21 +1,256 @@
+<script setup lang="ts">
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { articlePageListByAlias } from '~/api/index'
+import historyBg from '~/assets/images/history-bg.webp'
+import image from '~/assets/images/swiper/swiper-2.jpg'
+
+const year = ref('2024')
+const isLoading = ref(false)
+const allData = ref<any[]>([])
+const timelineRef = ref<HTMLElement | null>(null)
+const timelineSpacer = ref(0)
+const SCROLL_THROTTLE_DELAY = 250
+let wheelLocked = false
+let wheelUnlockTimer: ReturnType<typeof setTimeout> | null = null
+
+/**
+ * 统一从接口响应中提取年份信息；优先使用 normalizeHistoryData 写入的 normalizedYear。
+ */
+function resolveYearFromItem(item: Record<string, any>): string {
+  if (item?.normalizedYear)
+    return item.normalizedYear
+  return extractYear(item?.date || '')
+}
+
+/**
+ * 从title中提取年份 (e.g. "2024年6月" -> "2024", "2024" -> "2024")
+ */
+function extractYear(date: string): string {
+  const match = date.match(/(\d{4})/)
+  return match?.[1] ?? ''
+}
+
+/**
+ * 计算years列表 - 从数据中提取所有年份并去重
+ */
+const years = computed(() => {
+  const yearSet = new Set<string>()
+  allData.value.forEach((item) => {
+    const extractedYear = resolveYearFromItem(item)
+    if (extractedYear)
+      yearSet.add(extractedYear)
+  })
+  // 按年份倒序排列
+  return Array.from(yearSet).sort().reverse()
+})
+
+/**
+ * 根据选中年份过滤数据
+ */
+const currentData = computed(() => {
+  return allData.value.filter(item => resolveYearFromItem(item) === year.value)
+})
+
+/**
+ * 将后端返回的 { [year]: Event[] } 结构转成数组，便于现有渲染逻辑复用
+ */
+function normalizeHistoryData(rawData: unknown) {
+  if (!rawData)
+    return []
+
+  if (Array.isArray(rawData))
+    return rawData
+
+  if (typeof rawData === 'object') {
+    const normalized: any[] = []
+    Object.entries(rawData as Record<string, any>).forEach(([yearKey, items]) => {
+      if (!Array.isArray(items))
+        return
+      items.forEach((item) => {
+        normalized.push({
+          ...item,
+          normalizedYear: yearKey,
+        })
+      })
+    })
+    return normalized
+  }
+
+  return []
+}
+
+/**
+ * 获取发展历程数据
+ */
+async function fetchHistoryData() {
+  try {
+    isLoading.value = true
+    // 调用 articlePageListByAlias 接口获取发展历程数据
+    const response = await articlePageListByAlias({
+      alias: 'fazhanlicheng',
+    })
+    allData.value = normalizeHistoryData(response)
+    // 如果有数据，自动设置为最新的年份
+    if (years.value.length > 0 && !years.value.includes(year.value)) {
+      const latestYear = years.value[0]
+      if (latestYear) {
+        year.value = latestYear
+      }
+    }
+    // 初始化后滚动到活跃年份并重算上下占位
+    setTimeout(() => {
+      updateTimelineSpacer()
+      scrollToActiveYear()
+    }, 100)
+  }
+  catch (error) {
+    console.error('获取发展历程数据失败:', error)
+    allData.value = []
+  }
+  finally {
+    isLoading.value = false
+  }
+}
+
+/**
+ * 处理年份点击事件
+ */
+function handleYearClick(selectedYear: string) {
+  if (selectedYear === year.value)
+    return
+  year.value = selectedYear
+}
+
+/**
+ * 鼠标滚轮切换年份，并控制滚动节奏保持良好手感
+ */
+function handleTimelineWheel(event: WheelEvent) {
+  if (!years.value.length)
+    return
+
+  event.preventDefault()
+
+  if (wheelLocked)
+    return
+
+  const direction = event.deltaY > 0 ? 1 : event.deltaY < 0 ? -1 : 0
+  if (!direction)
+    return
+
+  const currentIndex = years.value.indexOf(year.value)
+  if (currentIndex === -1) {
+    const firstYear = years.value[0]
+    if (firstYear)
+      year.value = firstYear
+    return
+  }
+
+  const nextIndex = currentIndex + direction
+  if (nextIndex < 0 || nextIndex >= years.value.length)
+    return
+
+  const nextYear = years.value[nextIndex]
+  if (nextYear)
+    year.value = nextYear
+  wheelLocked = true
+  if (wheelUnlockTimer)
+    clearTimeout(wheelUnlockTimer)
+  wheelUnlockTimer = setTimeout(() => {
+    wheelLocked = false
+  }, SCROLL_THROTTLE_DELAY)
+}
+
+/**
+ * 自动滚动到选中的年份
+ */
+function scrollToActiveYear() {
+  if (!timelineRef.value)
+    return
+
+  const activeElement = timelineRef.value.querySelector('.history__year--active')
+  if (activeElement) {
+    const container = timelineRef.value
+    const elementRect = activeElement.getBoundingClientRect()
+    const containerRect = container.getBoundingClientRect()
+
+    // 计算偏移量，使选中的年份居中显示
+    const offset = elementRect.top - containerRect.top - containerRect.height / 2 + elementRect.height / 2
+    container.scrollBy({
+      top: offset,
+      behavior: 'smooth',
+    })
+  }
+}
+
+/**
+ * 计算时间线顶部和底部的占位高度，确保首尾年份也能居中对齐
+ */
+function updateTimelineSpacer() {
+  if (!timelineRef.value) {
+    timelineSpacer.value = 0
+    return
+  }
+
+  const containerHeight = timelineRef.value.clientHeight
+  const sampleYearEl = timelineRef.value.querySelector('.history__year') as HTMLElement | null
+  const sampleHeight = sampleYearEl ? sampleYearEl.offsetHeight : 0
+  // margin 在 CSS 中设置为 15px 上下，这里约等于 30px
+  const estimatedTotalHeight = sampleHeight + 30
+  const computedSpacer = Math.max((containerHeight - estimatedTotalHeight) / 2, 0)
+  timelineSpacer.value = computedSpacer
+}
+
+// 使用 watch 监听年份变化
+watch(
+  () => year.value,
+  () => {
+    // 使用 nextTick 确保 DOM 已更新
+    setTimeout(scrollToActiveYear, 0)
+  },
+)
+
+watch(
+  years,
+  () => {
+    setTimeout(updateTimelineSpacer, 0)
+  },
+)
+
+// 初始化 - 获取所有数据
+fetchHistoryData()
+
+onMounted(() => {
+  updateTimelineSpacer()
+  window.addEventListener('resize', updateTimelineSpacer)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateTimelineSpacer)
+  if (wheelUnlockTimer)
+    clearTimeout(wheelUnlockTimer)
+})
+</script>
+
 <template>
   <div class="history" :style="{ backgroundImage: `url(${historyBg})` }" data-anchor="fzlc">
     <div class="history__header">
       <div class="history__title-wrapper">
-        <h2 class="history__title">发展历程</h2>
+        <h2 class="history__title">
+          发展历程
+        </h2>
       </div>
     </div>
     <div class="history__content">
       <!-- 左侧时间列表 -->
       <div class="history__left">
         <div class="history__timeline-list">
-          <div ref="timelineRef" class="history__timeline-wrapper">
-            <div class="history__timeline-inner">
+          <div class="history__year-indicator" />
+          <div ref="timelineRef" class="history__timeline-wrapper" @wheel.prevent="handleTimelineWheel">
+            <div class="history__timeline-inner" :style="{ paddingTop: `${timelineSpacer}px`, paddingBottom: `${timelineSpacer}px` }">
               <div v-for="(item, index) in years" :key="index" class="history__year-wrapper">
                 <div class="history__year" :class="{ 'history__year--active': item === year }" @click="handleYearClick(item)">
                   {{ item }}
                 </div>
-                <div v-if="item === year" class="history__year-indicator" />
               </div>
             </div>
           </div>
@@ -35,7 +270,7 @@
             </div>
           </div>
           <div class="history__details-image">
-            <img :src="image" :alt="year" />
+            <img :src="image" :alt="year">
           </div>
         </div>
         <!-- 加载状态 -->
@@ -52,122 +287,8 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, computed, watch } from "vue"
-import { articlePageListByAlias } from "~/api/index"
-import image from "~/assets/images/swiper/swiper-2.jpg"
-import historyBg from "~/assets/images/history-bg.webp"
-
-const year = ref("2024")
-const isLoading = ref(false)
-const allData = ref<any[]>([])
-const timelineRef = ref<HTMLElement | null>(null)
-
-/**
- * 从title中提取年份 (e.g. "2024年6月" -> "2024", "2024" -> "2024")
- */
-const extractYear = (date: string): string => {
-  const match = date.match(/(\d{4})/)
-  return match?.[1] ?? ""
-}
-
-/**
- * 计算years列表 - 从数据中提取所有年份并去重
- */
-const years = computed(() => {
-  const yearSet = new Set<string>()
-  allData.value.forEach((item) => {
-    const extractedYear = extractYear(item.date)
-    if (extractedYear) {
-      yearSet.add(extractedYear)
-    }
-  })
-  // 按年份倒序排列
-  return Array.from(yearSet).sort().reverse()
-})
-
-/**
- * 根据选中年份过滤数据
- */
-const currentData = computed(() => {
-  return allData.value.filter((item) => {
-    const extractedYear = extractYear(item.date)
-    return extractedYear === year.value
-  })
-})
-
-/**
- * 获取发展历程数据
- */
-const fetchHistoryData = async () => {
-  try {
-    isLoading.value = true
-    // 调用 articlePageListByAlias 接口获取发展历程数据
-    const response = await articlePageListByAlias({
-      alias: "fazhanlicheng",
-    })
-    allData.value = response || []
-    // 如果有数据，自动设置为最新的年份
-    if (years.value.length > 0 && !years.value.includes(year.value)) {
-      const latestYear = years.value[0]
-      if (latestYear) {
-        year.value = latestYear
-      }
-    }
-    // 初始化后滚动到活跃年份
-    setTimeout(scrollToActiveYear, 100)
-  } catch (error) {
-    console.error("获取发展历程数据失败:", error)
-    allData.value = []
-  } finally {
-    isLoading.value = false
-  }
-}
-
-/**
- * 处理年份点击事件
- */
-const handleYearClick = (selectedYear: string) => {
-  if (selectedYear === year.value) return
-  year.value = selectedYear
-}
-
-/**
- * 自动滚动到选中的年份
- */
-const scrollToActiveYear = () => {
-  if (!timelineRef.value) return
-
-  const activeElement = timelineRef.value.querySelector(".history__year--active")
-  if (activeElement) {
-    const container = timelineRef.value
-    const elementRect = activeElement.getBoundingClientRect()
-    const containerRect = container.getBoundingClientRect()
-
-    // 计算偏移量，使选中的年份居中显示
-    const offset = elementRect.top - containerRect.top - containerRect.height / 2 + elementRect.height / 2
-    container.scrollBy({
-      top: offset,
-      behavior: "smooth",
-    })
-  }
-}
-
-// 使用 watch 监听年份变化
-watch(
-  () => year.value,
-  () => {
-    // 使用 nextTick 确保 DOM 已更新
-    setTimeout(scrollToActiveYear, 0)
-  },
-)
-
-// 初始化 - 获取所有数据
-fetchHistoryData()
-</script>
-
 <style scoped lang="scss">
-@use "~/assets/css/variables.scss";
+@use '~/assets/css/variables.scss';
 
 // Loading spinner animation
 @keyframes spin {
@@ -254,6 +375,7 @@ fetchHistoryData()
     overflow-x: hidden;
     position: relative;
     padding: 30px 0;
+    scroll-behavior: smooth;
   }
 
   &__timeline-inner {
@@ -284,10 +406,15 @@ fetchHistoryData()
   &__year-indicator {
     width: 0;
     height: 0;
+    right: 16px;
+    top: 50%;
+    z-index: 5;
+    position: absolute;
+    transform: translateY(-50%);
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
     border-right: 12px solid $primary-color;
-    flex-shrink: 0;
+    pointer-events: none;
   }
 
   &__year {

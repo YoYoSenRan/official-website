@@ -103,9 +103,9 @@ watch(
       <section class="snap-section">
         <Staff />
       </section>
-    </div>
-    <div class="footer-wrapper" :style="{ bottom: `-${footerHeight}px` }">
-      <Footer ref="footerRef" />
+      <section class="snap-section">
+        <Footer ref="footerRef" />
+      </section>
     </div>
     <FloatingAiButton />
   </div>
@@ -131,15 +131,5 @@ watch(
     display: flex;
     justify-content: center;
   }
-}
-
-// Footer 容器 - 较长规则
-.footer-wrapper {
-  left: 0;
-  right: 0;
-  z-index: 10;
-  width: 100%;
-  bottom: -100%;
-  position: absolute;
 }
 </style>

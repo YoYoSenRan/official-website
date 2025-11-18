@@ -12,7 +12,11 @@ const slidesPerView = computed(() => {
   const len = topicList.value.length
   return Math.min(4, Math.max(1, len))
 })
-const modules = computed(() => (topicList.value.length > 4 ? [Autoplay] : []))
+const swiperModules = [Autoplay]
+const shouldAutoplay = computed(() => topicList.value.length > 4)
+const autoplayOptions = computed(() => (shouldAutoplay.value ? { delay: 3000, disableOnInteraction: false } : false))
+const loopEnabled = computed(() => shouldAutoplay.value)
+const swiperKey = computed(() => `${shouldAutoplay.value ? 'auto' : 'static'}-${topicList.value.length}`)
 
 /**
  * 获取专题聚焦数据
@@ -60,12 +64,13 @@ onMounted(() => {
       </div>
       <div class="index-topic__bottom">
         <Swiper
-          :modules="modules"
+          :key="swiperKey"
+          :modules="swiperModules"
           direction="horizontal"
           :slides-per-view="slidesPerView"
           :space-between="10"
-          :loop="topicList.length > 4"
-          :autoplay="topicList.length > 4 ? { delay: 3000, disableOnInteraction: false } : false"
+          :loop="loopEnabled"
+          :autoplay="autoplayOptions"
           class="index-topic__swiper"
         >
           <SwiperSlide v-for="item in topicList" :key="item.id">

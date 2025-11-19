@@ -194,7 +194,7 @@ const modules = [Autoplay, Pagination]
   <div class="index-news-wrapper">
     <img :src="bg" class="index-news-wrapper__bg">
     <div class="index-news">
-      <div class="index-news__top">
+      <div class="index-news__top" data-aos="fade-up">
         <div class="index-news__top--left">
           <div class="index-news__title-section">
             <p class="index-news__title-en">
@@ -220,7 +220,7 @@ const modules = [Autoplay, Pagination]
         </div>
       </div>
       <div class="index-news__bottom">
-        <div class="index-news__bottom--left">
+        <div class="index-news__bottom--left" data-aos="fade-right" data-aos-delay="200">
           <Swiper
             :modules="modules"
             :slides-per-view="1"
@@ -249,7 +249,7 @@ const modules = [Autoplay, Pagination]
             </SwiperSlide>
           </Swiper>
         </div>
-        <div class="index-news__bottom--right">
+        <div class="index-news__bottom--right" data-aos="fade-left" data-aos-delay="400">
           <div class="index-news__list">
             <div v-for="(item, index) in newsList" :key="`${activeTab}-${index}`" class="index-news__list-item" @click="goToDetail(item.id)">
               <div class="index-news__list-item-date">
@@ -522,12 +522,30 @@ const modules = [Autoplay, Pagination]
           display: flex;
           transition: all 0.3s ease;
           align-items: center;
-          border-radius: 5px;
+          border-radius: 8px; /* Slightly more rounded */
+          padding: 10px; /* Add padding for hover effect */
 
           &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            background-color: #f9fafb;
+
             .index-news__list-item-content {
               .index-news__list-item-title {
                 color: #108cf0;
+              }
+            }
+
+            .index-news__list-item-date {
+              border-color: #108cf0;
+              background-color: #108cf0;
+
+              .index-news__list-date-text {
+                color: rgba(255, 255, 255, 0.8);
+              }
+
+              .index-news__list-date-day {
+                color: #fff;
               }
             }
           }
@@ -536,8 +554,7 @@ const modules = [Autoplay, Pagination]
           .index-news__list-item-date {
             width: 80px;
             border: 1px solid #e5e7eb;
-            height: 100px;
-            height: 15 0px;
+            height: 80px; /* Fixed height typo */
             display: flex;
             text-align: center;
             align-items: center;

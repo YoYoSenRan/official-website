@@ -49,7 +49,7 @@ onMounted(() => {
 <template>
   <div class="index-topic-wrapper">
     <div class="index-topic">
-      <div class="index-topic__top">
+      <div class="index-topic__top" data-aos="fade-up">
         <div class="index-topic__top--left">
           <div class="index-topic__title-section">
             <p class="index-topic__title-en">
@@ -62,7 +62,7 @@ onMounted(() => {
         </div>
         <div class="index-topic__top--right" />
       </div>
-      <div class="index-topic__bottom">
+      <div class="index-topic__bottom" data-aos="fade-up" data-aos-delay="200">
         <Swiper
           :key="swiperKey"
           :modules="swiperModules"
@@ -145,10 +145,18 @@ onMounted(() => {
       cursor: pointer;
       height: 122px;
       overflow: hidden;
+      border-radius: 8px; /* Rounded corners */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        transition: transform 0.5s ease; /* Smooth zoom */
+      }
+
+      &:hover img {
+        transform: scale(1.1); /* Zoom effect */
       }
     }
   }

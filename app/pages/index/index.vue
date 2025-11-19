@@ -46,9 +46,11 @@ import FloatingAiButton from './components/FloatingAiButton.vue'
     width: 100%;
     height: 100%;
     overflow-y: auto;
+    scroll-behavior: smooth;
   }
 
   .snap-section {
+    width: 100%;
     display: flex;
     justify-content: center;
   }

@@ -43,7 +43,7 @@ onMounted(() => {
 <template>
   <div class="index-staff-wrapper">
     <div class="index-staff">
-      <div class="index-staff__top">
+      <div class="index-staff__top" data-aos="fade-up">
         <div class="index-staff__top--left">
           <div class="index-staff__title-section">
             <p class="index-staff__title-en">
@@ -56,7 +56,7 @@ onMounted(() => {
         </div>
         <div class="index-staff__top--right" />
       </div>
-      <div class="index-staff__bottom">
+      <div class="index-staff__bottom" data-aos="zoom-in" data-aos-delay="200">
         <div class="index-staff__carousel-container">
           <div class="index-staff__carousel-3d">
             <div class="index-staff__carousel" :class="{ 'index-staff__carousel--paused': isHovered }" @mouseenter="pauseRotation" @mouseleave="resumeRotation">

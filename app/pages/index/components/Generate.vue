@@ -65,7 +65,7 @@ onMounted(() => {
 <template>
   <div class="generate">
     <div class="generate__layout">
-      <div class="generate__top">
+      <div class="generate__top" data-aos="fade-up">
         <div class="generate__top-left">
           <div class="generate__title-group">
             <p class="generate__title-en">
@@ -77,7 +77,7 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div class="generate__body">
+      <div class="generate__body" data-aos="fade-up" data-aos-delay="200">
         <div class="generate__body-left">
           <div class="generate__tabs">
             <button class="generate__tab">
@@ -263,14 +263,16 @@ onMounted(() => {
     color: #128cf0;
     border: 1px solid #128cf0;
     cursor: pointer;
-    height: 30px;
+    height: 32px; /* Slightly taller */
     display: inline-flex;
-    padding: 0 12px;
-    font-size: 16px;
+    padding: 0 16px; /* More padding */
+    font-size: 14px; /* Slightly smaller font for cleaner look */
     background: #ffffff;
     box-sizing: border-box;
     align-items: center;
-    border-radius: 4px;
+    border-radius: 20px; /* Pill shape */
+    transition: all 0.3s ease; /* Smooth transition */
+    font-weight: 500;
     justify-content: center;
 
     &--active,
@@ -279,6 +281,7 @@ onMounted(() => {
     &:hover {
       color: #ffffff;
       background: #128cf0;
+      box-shadow: 0 4px 6px rgba(18, 140, 240, 0.2); /* Shadow on active/hover */
       border-color: #128cf0;
     }
   }
@@ -343,9 +346,16 @@ onMounted(() => {
     min-height: 86px;
     text-align: center;
     align-items: center;
-    border-radius: 6px;
+    border-radius: 8px; /* Rounded corners */
+    transition: all 0.3s ease; /* Smooth hover */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow */
     flex-direction: column;
     justify-content: center;
+
+    &:hover {
+      transform: translateY(-3px); /* Lift effect */
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Deeper shadow */
+    }
   }
 
   &__metric-value {

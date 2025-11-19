@@ -64,10 +64,10 @@ import ldbz from '~/assets/images/ldbz.png'
   }
 
   &__title-cn {
-    color: #1f2937;
-    font-size: 32px;
+    color: #333;
+    margin: 0 0 20px 0;
+    font-size: 24px;
     font-weight: bold;
-    line-height: 1.2;
   }
 
   &__content {

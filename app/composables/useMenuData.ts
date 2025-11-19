@@ -81,25 +81,25 @@ export default function () {
             route: '/ggtz/cwgk',
           },
           {
-            title: '工会团青',
-            route: '/ggtz/ghtq',
-          },
-          {
-            title: '纪检监察',
-            route: '/ggtz/jjjc',
-          },
-          {
-            title: '人力资源',
-            route: '/ggtz/rlzy',
+            title: '党务公开',
+            route: '/ggtz/dwgk',
           },
           {
             title: '日常通知',
             route: '/ggtz/rctz',
           },
-          {
-            title: '党务公开',
-            route: '/ggtz/dwgk',
-          },
+          // {
+          //   title: '工会团青',
+          //   route: '/ggtz/ghtq',
+          // },
+          // {
+          //   title: '纪检监察',
+          //   route: '/ggtz/jjjc',
+          // },
+          // {
+          //   title: '人力资源',
+          //   route: '/ggtz/rlzy',
+          // },
         ],
       },
     ]

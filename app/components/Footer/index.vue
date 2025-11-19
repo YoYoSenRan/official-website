@@ -140,7 +140,6 @@ onMounted(() => {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
     position: absolute;
     background-size: 100% 100%;
     background-repeat: no-repeat;
@@ -186,6 +185,7 @@ onMounted(() => {
     width: 150px;
     height: 150px;
     display: flex;
+    z-index: 2;
     align-items: center;
     flex-shrink: 0;
     justify-content: center;

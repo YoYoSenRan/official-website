@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { useMenuStore } from '~/store/menu'
 import { decodeHtmlEntities } from '~/utils/utils'
-import { headerArticlePageList } from '~/api'
+import { headerMuneList, headerArticlePageList } from '~/api'
 import Tabs from './components/tabs.vue'
 import dayjs from 'dayjs'
 import image from '~/assets/images/news-bg.png'
@@ -12,15 +11,9 @@ definePageMeta({
 
 const route = useRoute()
 const router = useRouter()
-const menuStore = useMenuStore()
 
 const id = ref('')
-const categorys = computed(() => {
-  return menuStore.news.map((item: any) => ({
-    title: item.name || item.title,
-    value: item.id,
-  }))
-})
+const categorys = ref<{ title: string, value: string }[]>([])
 
 /** 当前页码 */
 const currentPage = ref(1)
@@ -52,18 +45,60 @@ function formatDateDay(dateString: string) {
   return dayjs(dateString).format('DD')
 }
 
-watch(() => id.value, handleTabChange)
 watch(
   () => route.query.id,
   (value) => {
-    if (value) {
+    if (value && id.value !== value) {
       id.value = value as string
     }
-    else if (menuStore.news.length > 0) {
-      id.value = menuStore.news[0].id
+    else if (!value && categorys.value.length > 0) {
+      const firstCategory = categorys.value[0]
+      if (firstCategory)
+        id.value = firstCategory.value
     }
   },
   { immediate: true },
+)
+
+const skipNextWatch = ref(false)
+
+async function loadCategoryList() {
+  try {
+    const response = await headerMuneList({
+      alias: 'xinwenzhongxin',
+      isIncludeChildren: false,
+      isIncludeSelf: false,
+    })
+    const list = Array.isArray(response) ? response : []
+    categorys.value = list.map((item: any) => ({
+      title: item.name || item.title,
+      value: String(item.id),
+    }))
+    if (categorys.value.length > 0) {
+      const firstCategory = categorys.value[0]
+      if (!firstCategory)
+        return
+      skipNextWatch.value = true
+      id.value = firstCategory.value
+      handleTabChange()
+    }
+  }
+  catch {
+    categorys.value = []
+  }
+}
+
+watch(
+  () => id.value,
+  (value) => {
+    if (!value)
+      return
+    if (skipNextWatch.value) {
+      skipNextWatch.value = false
+      return
+    }
+    handleTabChange()
+  },
 )
 
 // ==================== 方法 ====================
@@ -153,8 +188,7 @@ function onCategoryChange(value: string) {
  * 组件挂载时加载初始数据
  */
 onMounted(() => {
-  loadNews()
-  menuStore.init()
+  loadCategoryList()
 })
 </script>
 

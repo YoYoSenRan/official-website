@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useMenuStore } from '~/store/menu'
+import { decodeHtmlEntities } from '~/utils/utils'
 import { headerArticlePageList } from '~/api'
 import Tabs from './components/tabs.vue'
 import dayjs from 'dayjs'
@@ -89,7 +90,7 @@ async function loadNews(page: number = currentPage.value, size: number = pageSiz
         newsList.value = resData.content.map((item: any) => ({
           id: item.id,
           title: item.title,
-          description: item.description || '',
+          description: decodeHtmlEntities(item.description || ''),
           image: item.image,
           date: formatDateForList(item.publishDate || item.created),
           day: formatDateDay(item.publishDate || item.created),
@@ -97,12 +98,18 @@ async function loadNews(page: number = currentPage.value, size: number = pageSiz
         total.value = Number.parseInt(resData.totalElements) || 0
       }
       else if (Array.isArray(response)) {
-        newsList.value = response
+        newsList.value = response.map((item: any) => ({
+          ...item,
+          description: decodeHtmlEntities(item.description || ''),
+        }))
         total.value = response.length
       }
     }
     else if (Array.isArray(response)) {
-      newsList.value = response
+      newsList.value = response.map((item: any) => ({
+        ...item,
+        description: decodeHtmlEntities(item.description || ''),
+      }))
       total.value = response.length
     }
   }

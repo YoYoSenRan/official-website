@@ -77,3 +77,26 @@ export function throttling(func: (...args: any[]) => void, wait: number = 500, i
 export function buildFullUrl(url: string): string {
   return url
 }
+
+const htmlEntityMap: Record<string, string> = {
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+  '&quot;': '"',
+  '&#39;': '\'',
+  '&nbsp;': ' ',
+  '&ldquo;': '“',
+  '&rdquo;': '”',
+}
+
+/**
+ * 将常见HTML实体转换为可阅读字符，避免前端直接渲染实体编码
+ */
+export function decodeHtmlEntities(content: string): string {
+  if (!content)
+    return ''
+
+  return content.replace(/(&[a-z]+;|&#\d+;)/gi, (entity) => {
+    return htmlEntityMap[entity] ?? entity
+  })
+}

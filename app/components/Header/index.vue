@@ -42,6 +42,7 @@ const notificationsData = [
   { id: 1, type: 'all', category: '厂务公开', title: '公司工作流程优化通知', time: '2024-10-28' },
   { id: 2, type: 'all', category: '日常通知', title: '员工培训计划安排', time: '2024-10-27' },
   { id: 3, type: 'open', category: '厂务公开', title: '厂区升级改造计划', time: '2024-10-26' },
+  { id: 4, type: 'party', category: '党务公开', title: '党建活动信息公开', time: '2024-10-25' },
 ]
 
 /** 通知菜单 - 计算属性：tabs数据 */
@@ -49,11 +50,13 @@ const notificationTabs = computed(() => {
   const allCount = notificationsData.length
   const openCount = notificationsData.filter(item => item.type === 'open' || item.type === 'all').length
   const dailyCount = notificationsData.filter(item => item.type === 'daily' || item.type === 'all').length
+  const partyCount = notificationsData.filter(item => item.type === 'party' || item.type === 'all').length
 
   return [
     { key: 'all', label: '全部', count: allCount },
     { key: 'open', label: '厂务公开', count: openCount },
     { key: 'daily', label: '日常通知', count: dailyCount },
+    { key: 'party', label: '党务公开', count: partyCount },
   ]
 })
 

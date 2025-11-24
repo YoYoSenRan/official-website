@@ -93,7 +93,10 @@ onMounted(() => {
               实时负荷
             </button>
             <button class="generate__tab">
-              接入容量
+              水库水位
+            </button>
+            <button class="generate__tab">
+              入库流量
             </button>
           </div>
           <div class="generate__chart">
@@ -118,7 +121,20 @@ onMounted(() => {
           </div>
           <!-- 指标数据采用分组网格布局，以满足列间距与垂直间距要求 -->
           <div class="generate__metric-rows">
-            <div class="generate__metric-row generate__metric-row--two">
+            <div class="generate__metric-row generate__metric-row--three">
+              <div class="generate__metric">
+                <div class="generate__metric-value">
+                  <span class="generate__metric-number">
+                    1377.19
+                  </span>
+                  <span class="generate__metric-unit">
+                    M
+                  </span>
+                </div>
+                <div class="generate__metric-sub">
+                  入库流量
+                </div>
+              </div>
               <div class="generate__metric">
                 <div class="generate__metric-value">
                   <span class="generate__metric-number">

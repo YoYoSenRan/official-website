@@ -111,11 +111,6 @@ onMounted(() => {
         <div class="footer__column">
           <USelect v-model="governmentValue" :items="governmentItems" placeholder="政府机构链接" />
         </div>
-
-        <!-- 系统链接 -->
-        <div class="footer__column">
-          <USelect v-model="systemValue" :items="systemItems" placeholder="系统链接" />
-        </div>
       </div>
 
       <!-- 二维码 -->
@@ -160,7 +155,7 @@ onMounted(() => {
     gap: 30px;
     flex: 1;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   // 链接列

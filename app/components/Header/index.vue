@@ -28,7 +28,7 @@ const menu = computed(() => {
 })
 
 onMounted(() => {
-  menuStore.init()
+  menuStore.fetchNewsList({ isIncludeChildren: false, isIncludeSelf: false })
 })
 
 // ==================== 通知菜单功能 ====================

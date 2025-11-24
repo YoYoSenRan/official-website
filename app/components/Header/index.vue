@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMenuStore } from '~/store/menu'
-import { articleSearch } from '~/api'
+import { articleSearch, headerArticlePageList } from '~/api'
 import logo from '~/assets/images/logo.png'
 import News from '~/components/News/index.vue'
 import dayjs from 'dayjs'
@@ -36,36 +36,85 @@ onMounted(() => {
 /** 通知菜单 - 状态 */
 const showNotificationMenu = ref(false)
 const activeNotificationTab = ref('all')
+const notificationsData = ref<Record<string, any[]>>({
+  all: [],
+  open: [],
+  daily: [],
+  party: [],
+})
+const notificationCounts = ref<Record<string, number>>({
+  all: 0,
+  open: 0,
+  daily: 0,
+  party: 0,
+})
 
-/** 通知菜单 - 模拟数据 */
-const notificationsData = [
-  { id: 1, type: 'all', category: '厂务公开', title: '公司工作流程优化通知', time: '2024-10-28' },
-  { id: 2, type: 'all', category: '日常通知', title: '员工培训计划安排', time: '2024-10-27' },
-  { id: 3, type: 'open', category: '厂务公开', title: '厂区升级改造计划', time: '2024-10-26' },
-  { id: 4, type: 'party', category: '党务公开', title: '党建活动信息公开', time: '2024-10-25' },
-]
+const CATEGORY_IDS: Record<string, string> = {
+  all: '83926063672174596',
+  open: '83926063743477764',
+  party: '83926063751342083',
+  daily: '84952483787808770',
+}
 
 /** 通知菜单 - 计算属性：tabs数据 */
 const notificationTabs = computed(() => {
-  const allCount = notificationsData.length
-  const openCount = notificationsData.filter(item => item.type === 'open' || item.type === 'all').length
-  const dailyCount = notificationsData.filter(item => item.type === 'daily' || item.type === 'all').length
-  const partyCount = notificationsData.filter(item => item.type === 'party' || item.type === 'all').length
-
   return [
-    { key: 'all', label: '全部', count: allCount },
-    { key: 'open', label: '厂务公开', count: openCount },
-    { key: 'daily', label: '日常通知', count: dailyCount },
-    { key: 'party', label: '党务公开', count: partyCount },
+    { key: 'all', label: '全部', count: notificationCounts.value.all },
+    { key: 'open', label: '厂务公开', count: notificationCounts.value.open },
+    { key: 'daily', label: '日常通知', count: notificationCounts.value.daily },
+    { key: 'party', label: '党务公开', count: notificationCounts.value.party },
   ]
 })
 
-/** 通知菜单 - 计算属性：过滤后的通知列表 */
-const filteredNotifications = computed(() => {
-  if (activeNotificationTab.value === 'all') {
-    return notificationsData
+const currentNotificationsList = computed(() => notificationsData.value[activeNotificationTab.value] || [])
+
+/** 获取单个 Tab 的通知列表 */
+async function fetchNotificationByKey(key: string) {
+  const subChannelId = CATEGORY_IDS[key]
+  if (!subChannelId)
+    return
+
+  try {
+    const res = await headerArticlePageList({
+      subChannelId,
+      page: 0,
+      pageSize: 10,
+    })
+
+    if (res && res.content) {
+      notificationsData.value[key] = res.content.map((item: any) => ({
+        id: item.id,
+        title: item.title,
+        time: dayjs(item.created).format('YYYY-MM-DD'),
+        category: item.channel?.name || '',
+      }))
+
+      // Update count for current tab
+      if (res.totalElements) {
+        notificationCounts.value[key] = Number(res.totalElements)
+      }
+    }
+    else {
+      notificationsData.value[key] = []
+    }
   }
-  return notificationsData.filter(item => item.type === activeNotificationTab.value)
+  catch (error) {
+    console.error(`Failed to fetch notifications for ${key}:`, error)
+    notificationsData.value[key] = []
+  }
+}
+
+/** 获取所有通知列表 */
+async function fetchAllNotifications() {
+  const keys = Object.keys(CATEGORY_IDS)
+  await Promise.all(keys.map(key => fetchNotificationByKey(key)))
+}
+
+/** 监听菜单打开 */
+watch(showNotificationMenu, (newVal) => {
+  if (newVal) {
+    fetchAllNotifications()
+  }
 })
 
 /** 通知菜单 - 切换菜单显示 */
@@ -241,7 +290,7 @@ function goHome() {
 
             <!-- 公告列表 -->
             <div class="notification-list">
-              <div v-for="item in filteredNotifications" :key="item.id" class="notification-item">
+              <div v-for="item in currentNotificationsList" :key="item.id" class="notification-item">
                 <div class="notification-item__title">
                   {{ item.title }}
                 </div>
@@ -481,7 +530,7 @@ function goHome() {
 .notification-dropdown {
   top: 100%;
   left: 50%;
-  width: 300px;
+  width: 460px;
   display: flex;
   padding: 0;
   z-index: 1000;

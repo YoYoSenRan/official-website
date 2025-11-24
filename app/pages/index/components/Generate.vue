@@ -1,25 +1,91 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { getProductionTotalData, getProductionTotalDataStat } from '~/api/production'
+import dayjs from 'dayjs'
 
 const now = ref('')
+let timeInterval: ReturnType<typeof setInterval> | null = null
 const labels = ref<string[]>([])
 const series = ref<number[]>([])
 const yAxisName = ref('')
 
-interface GeneratePoint { time: string, value: number }
-interface GenerateResponse { yAxisName: string, points: GeneratePoint[] }
+const tabs = [
+  { label: '日电量', type: 1 },
+  { label: '月电量', type: 2 },
+  { label: '年电量', type: 3 },
+  { label: '实时负荷', type: 4 },
+  { label: '水库水位', type: 5 },
+  { label: '入库流量', type: 6 },
+]
+const currentTab = ref(1)
 
-function mockFetchGenerate(): Promise<GenerateResponse> {
-  return new Promise((resolve) => {
-    const points: GeneratePoint[] = Array.from({ length: 24 }, (_, h) => {
-      const time = `${String(h).padStart(2, '0')}:00`
-      const base = 20 + 10 * Math.sin((Math.PI * h) / 24 * 2)
-      const noise = Math.random() * 4 - 2
-      return { time, value: Math.round((base + noise) * 100) / 100 }
-    })
-    const res: GenerateResponse = { yAxisName: '电量(kWh)', points }
-    setTimeout(() => resolve(res), 300)
-  })
+const metrics = ref({
+  inboundTraffic: '0M',
+  monthTotal: '0亿kWh',
+  dayTotal: '0万kWh',
+  reservoirWaterLevel: '0M',
+  totalPower: '0MW',
+  yearTotal: '0亿kWh',
+  runData: '0',
+})
+
+function splitValueUnit(str: string) {
+  if (!str)
+    return { value: '-', unit: '' }
+  // Avoid regex backtracking issue by using non-greedy or clearer separation
+  // Simple approach: extract leading float number
+  const floatVal = Number.parseFloat(str)
+  if (Number.isNaN(floatVal))
+    return { value: str, unit: '' }
+  const value = String(floatVal)
+  const unit = str.substring(value.length).trim()
+  return { value, unit }
+}
+
+const parsedMetrics = computed(() => {
+  const m = metrics.value
+  return {
+    inboundTraffic: splitValueUnit(m.inboundTraffic),
+    monthTotal: splitValueUnit(m.monthTotal),
+    dayTotal: splitValueUnit(m.dayTotal),
+    reservoirWaterLevel: splitValueUnit(m.reservoirWaterLevel),
+    totalPower: splitValueUnit(m.totalPower),
+    yearTotal: splitValueUnit(m.yearTotal),
+    runData: splitValueUnit(m.runData),
+  }
+})
+
+async function handleTabChange(type: number) {
+  if (currentTab.value === type)
+    return
+  currentTab.value = type
+  await fetchChartData(type)
+}
+
+async function fetchChartData(type: number) {
+  try {
+    const res = await getProductionTotalDataStat({ dataType: type })
+    if (res) {
+      labels.value = (res.data || []).map((p: any) => p.label)
+      series.value = (res.data || []).map((p: any) => Number(p.value))
+      yAxisName.value = res.yAxisName
+    }
+  }
+  catch (e) {
+    console.error('Failed to fetch chart data:', e)
+  }
+}
+
+async function fetchMetrics() {
+  try {
+    const res = await getProductionTotalData()
+    if (res) {
+      metrics.value = res
+    }
+  }
+  catch (e) {
+    console.error('Failed to fetch metrics:', e)
+  }
 }
 
 const option = computed(() => ({
@@ -50,15 +116,23 @@ const option = computed(() => ({
   ],
 }))
 
+function updateCurrentTime() {
+  now.value = dayjs().format('YYYY-MM-DD HH:mm:ss')
+}
+
 onMounted(() => {
-  const t = new Date()
-  const fmt = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')} ${String(t.getHours()).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}:${String(t.getSeconds()).padStart(2, '0')}`
-  now.value = fmt
-  mockFetchGenerate().then((res) => {
-    labels.value = res.points.map(p => p.time)
-    series.value = res.points.map(p => p.value)
-    yAxisName.value = res.yAxisName
-  })
+  updateCurrentTime()
+  timeInterval = setInterval(updateCurrentTime, 1000)
+
+  fetchChartData(currentTab.value)
+  fetchMetrics()
+})
+
+onBeforeUnmount(() => {
+  if (timeInterval) {
+    clearInterval(timeInterval)
+    timeInterval = null
+  }
 })
 </script>
 
@@ -80,23 +154,14 @@ onMounted(() => {
       <div class="generate__body" data-aos="fade-up" data-aos-delay="200">
         <div class="generate__body-left">
           <div class="generate__tabs">
-            <button class="generate__tab">
-              日电量
-            </button>
-            <button class="generate__tab">
-              月电量
-            </button>
-            <button class="generate__tab">
-              年电量
-            </button>
-            <button class="generate__tab">
-              实时负荷
-            </button>
-            <button class="generate__tab">
-              水库水位
-            </button>
-            <button class="generate__tab">
-              入库流量
+            <button
+              v-for="tab in tabs"
+              :key="tab.type"
+              class="generate__tab"
+              :class="{ 'is-active': currentTab === tab.type }"
+              @click="handleTabChange(tab.type)"
+            >
+              {{ tab.label }}
             </button>
           </div>
           <div class="generate__chart">
@@ -112,7 +177,7 @@ onMounted(() => {
             </div>
             <div class="generate__metric-status">
               <div class="generate__safe-days">
-                5149天
+                {{ parsedMetrics.runData.value }}
               </div>
               <div class="generate__timestamp">
                 {{ now }}
@@ -125,10 +190,10 @@ onMounted(() => {
               <div class="generate__metric">
                 <div class="generate__metric-value">
                   <span class="generate__metric-number">
-                    1377.19
+                    {{ parsedMetrics.inboundTraffic.value }}
                   </span>
                   <span class="generate__metric-unit">
-                    M
+                    {{ parsedMetrics.inboundTraffic.unit }}
                   </span>
                 </div>
                 <div class="generate__metric-sub">
@@ -138,10 +203,10 @@ onMounted(() => {
               <div class="generate__metric">
                 <div class="generate__metric-value">
                   <span class="generate__metric-number">
-                    1572
+                    {{ parsedMetrics.totalPower.value }}
                   </span>
                   <span class="generate__metric-unit">
-                    MW
+                    {{ parsedMetrics.totalPower.unit }}
                   </span>
                 </div>
                 <div class="generate__metric-sub">
@@ -151,10 +216,10 @@ onMounted(() => {
               <div class="generate__metric">
                 <div class="generate__metric-value">
                   <span class="generate__metric-number">
-                    1377.19
+                    {{ parsedMetrics.reservoirWaterLevel.value }}
                   </span>
                   <span class="generate__metric-unit">
-                    M
+                    {{ parsedMetrics.reservoirWaterLevel.unit }}
                   </span>
                 </div>
                 <div class="generate__metric-sub">
@@ -166,10 +231,10 @@ onMounted(() => {
               <div class="generate__metric">
                 <div class="generate__metric-value">
                   <span class="generate__metric-number">
-                    36.28
+                    {{ parsedMetrics.yearTotal.value }}
                   </span>
                   <span class="generate__metric-unit">
-                    亿kWh
+                    {{ parsedMetrics.yearTotal.unit }}
                   </span>
                 </div>
                 <div class="generate__metric-sub">
@@ -179,10 +244,10 @@ onMounted(() => {
               <div class="generate__metric">
                 <div class="generate__metric-value">
                   <span class="generate__metric-number">
-                    23
+                    {{ parsedMetrics.monthTotal.value }}
                   </span>
                   <span class="generate__metric-unit">
-                    亿kWh
+                    {{ parsedMetrics.monthTotal.unit }}
                   </span>
                 </div>
                 <div class="generate__metric-sub">
@@ -192,10 +257,10 @@ onMounted(() => {
               <div class="generate__metric">
                 <div class="generate__metric-value">
                   <span class="generate__metric-number">
-                    2.77
+                    {{ parsedMetrics.dayTotal.value }}
                   </span>
                   <span class="generate__metric-unit">
-                    万kWh
+                    {{ parsedMetrics.dayTotal.unit }}
                   </span>
                 </div>
                 <div class="generate__metric-sub">

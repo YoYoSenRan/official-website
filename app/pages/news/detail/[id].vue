@@ -43,7 +43,7 @@ async function fetchNewsDetail() {
         views: Number.parseInt(response.views) || Number.parseInt(response.yearViews) || 0,
         author: response.user?.username || '',
         collect: '收藏本文',
-        image: `http://2444450wnth3.vicp.fun${response.image}`,
+        image: response.image,
         content: response.text,
         description: response.plainText,
       }

@@ -1,7 +1,15 @@
 <script setup lang="ts">
-import Dev from '../dev/index.vue'
+definePageMeta({
+  middleware: [
+    function (to, from) {
+      if (to.path === '/ggtz' || to.path === '/ggtz/') {
+        return navigateTo('/ggtz/cwgk')
+      }
+    },
+  ],
+})
 </script>
 
 <template>
-  <Dev />
+  <div>Redirecting...</div>
 </template>

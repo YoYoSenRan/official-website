@@ -125,8 +125,17 @@ function toggleNotificationMenu() {
 /** 通知菜单 - 查看更多通知 */
 function handleViewMoreNotifications() {
   showNotificationMenu.value = false
-  // 跳转到新闻中心的公告页面
-  navigateTo('/xwzx?category=gsgg')
+
+  // 映射 tab key 到路由 slug
+  const tabToSlug: Record<string, string> = {
+    all: 'cwgk', // 默认为厂务公开
+    open: 'cwgk',
+    party: 'dwgk',
+    daily: 'rctz',
+  }
+
+  const slug = tabToSlug[activeNotificationTab.value] || 'cwgk'
+  navigateTo(`/ggtz/${slug}`)
 }
 
 /** 通知菜单 - 全局点击监听，点击外部关闭菜单 */

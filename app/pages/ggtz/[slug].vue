@@ -195,7 +195,7 @@ function handlePaginationChange(params: { page: number, pageSize: number }) {
 /** 处理新闻点击 */
 function onNewsClick(value: any) {
   router.push({
-    path: `/news/detail/${value.id}`,
+    path: `/ggtz/detail/${value.id}`,
   })
 }
 

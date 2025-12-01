@@ -104,6 +104,12 @@ async function fetchNotificationByKey(key: string) {
   }
 }
 
+/** 处理通知项点击 */
+function handleNotificationClick(item: any) {
+  showNotificationMenu.value = false
+  navigateTo(`/ggtz/detail/${item.id}`)
+}
+
 /** 获取所有通知列表 */
 async function fetchAllNotifications() {
   const keys = Object.keys(CATEGORY_IDS)
@@ -240,6 +246,14 @@ watchEffect(() => {
 function goHome() {
   navigateTo('/')
 }
+
+/** 登录/注册跳转 */
+function handleLogin() {
+  if (import.meta.client) {
+    const { protocol, hostname } = window.location
+    window.location.href = `${protocol}//${hostname}:9055`
+  }
+}
 </script>
 
 <template>
@@ -299,7 +313,7 @@ function goHome() {
 
             <!-- 公告列表 -->
             <div class="notification-list">
-              <div v-for="item in currentNotificationsList" :key="item.id" class="notification-item">
+              <div v-for="item in currentNotificationsList" :key="item.id" class="notification-item" @click="handleNotificationClick(item)">
                 <div class="notification-item__title">
                   {{ item.title }}
                 </div>
@@ -326,7 +340,7 @@ function goHome() {
           <path d="m21 21-4.35-4.35" />
         </svg>
       </div>
-      <div class="header__login">
+      <div class="header__login" @click="handleLogin">
         <svg class="login-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
           <circle cx="12" cy="7" r="4" />

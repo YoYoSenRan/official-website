@@ -100,3 +100,13 @@ export function decodeHtmlEntities(content: string): string {
     return htmlEntityMap[entity] ?? entity
   })
 }
+
+/**
+ * 移除HTML实体符号
+ * 例如 &ldquo; &rdquo; 等
+ */
+export function removeHtmlEntities(content: string): string {
+  if (!content)
+    return ''
+  return content.replace(/&[a-z0-9#]+;/gi, '')
+}

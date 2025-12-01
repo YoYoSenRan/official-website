@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { decodeHtmlEntities } from '~/utils/utils'
+import { removeHtmlEntities } from '~/utils/utils'
 import { headerMuneList, headerArticlePageList } from '~/api'
 import Tabs from './components/tabs.vue'
 import dayjs from 'dayjs'
@@ -124,8 +124,8 @@ async function loadNews(page: number = currentPage.value, size: number = pageSiz
       if (resData.content && Array.isArray(resData.content)) {
         newsList.value = resData.content.map((item: any) => ({
           id: item.id,
-          title: item.title,
-          description: decodeHtmlEntities(item.description || ''),
+          title: removeHtmlEntities(item.title),
+          description: removeHtmlEntities(item.description || ''),
           image: item.image,
           date: formatDateForList(item.publishDate || item.created),
           day: formatDateDay(item.publishDate || item.created),
@@ -135,7 +135,8 @@ async function loadNews(page: number = currentPage.value, size: number = pageSiz
       else if (Array.isArray(response)) {
         newsList.value = response.map((item: any) => ({
           ...item,
-          description: decodeHtmlEntities(item.description || ''),
+          title: removeHtmlEntities(item.title),
+          description: removeHtmlEntities(item.description || ''),
         }))
         total.value = response.length
       }
@@ -143,7 +144,8 @@ async function loadNews(page: number = currentPage.value, size: number = pageSiz
     else if (Array.isArray(response)) {
       newsList.value = response.map((item: any) => ({
         ...item,
-        description: decodeHtmlEntities(item.description || ''),
+        title: removeHtmlEntities(item.title),
+        description: removeHtmlEntities(item.description || ''),
       }))
       total.value = response.length
     }

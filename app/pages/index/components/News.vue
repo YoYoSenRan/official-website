@@ -2,11 +2,11 @@
 import 'swiper/css'
 import 'swiper/css/pagination'
 import { useMenuStore } from '~/store/menu'
-import { buildFullUrl } from '~/utils/utils'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay, Pagination } from 'swiper/modules'
 import { ref, watch, computed, onMounted } from 'vue'
 import { blockItem, headerArticlePageList } from '~/api'
+import { buildFullUrl, removeHtmlEntities } from '~/utils/utils'
 import bg from '~/assets/images/bg-2.png'
 import dayjs from 'dayjs'
 
@@ -53,8 +53,8 @@ async function fetchCarouselData() {
       // 转换轮播数据格式
       newsData.value = response.slice(0, 6).map((item: any) => ({
         id: item.id,
-        title: item.title,
-        description: item.description || '',
+        title: removeHtmlEntities(item.title),
+        description: removeHtmlEntities(item.description || ''),
         image: buildFullUrl(item.image),
         date: formatDateForList(item.publishDate || item.created),
         day: formatDateDay(item.publishDate || item.created),
@@ -96,8 +96,8 @@ async function fetchNewsData() {
       // 转换数据格式
       const formattedArticles = articles.map((item: any) => ({
         id: item.id,
-        title: item.title,
-        description: item.description || '',
+        title: removeHtmlEntities(item.title),
+        description: removeHtmlEntities(item.description || ''),
         image: buildFullUrl(item.image),
         date: formatDateForList(item.publishDate || item.created),
         day: formatDateDay(item.publishDate || item.created),

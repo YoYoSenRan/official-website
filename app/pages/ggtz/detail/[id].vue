@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { articleDetail } from '~/api'
 import { ref, onMounted } from 'vue'
+import { removeHtmlEntities } from '~/utils/utils'
 import dayjs from 'dayjs'
 import image from '~/assets/images/news-bg.png'
 
@@ -38,14 +39,14 @@ async function fetchNewsDetail() {
     if (response) {
       newsData.value = {
         id: response.id,
-        title: response.title,
+        title: removeHtmlEntities(response.title),
         publishDate: response.publishDate ? dayjs(response.publishDate).format('YYYY-MM-DD') : '',
         views: Number.parseInt(response.views) || Number.parseInt(response.yearViews) || 0,
         author: response.user?.username || '',
         collect: '收藏本文',
         image: response.image,
         content: response.text,
-        description: response.plainText,
+        description: removeHtmlEntities(response.plainText),
       }
     }
   }

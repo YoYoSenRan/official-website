@@ -56,19 +56,19 @@ export default function () {
       },
       {
         title: '企业文化',
-        route: '/qywh/index',
+        route: '/qywh/jituangongsi',
         child: [
           {
             title: '集团公司',
-            route: '/qywh/index',
+            route: '/qywh/jituangongsi',
           },
           {
             title: '四川公司',
-            route: '/qywh/index',
+            route: '/qywh/sichuanggongsi',
           },
           {
             title: '泸定公司',
-            route: '/qywh/index',
+            route: '/qywh/ludinggongsi',
           },
         ],
       },

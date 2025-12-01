@@ -63,3 +63,11 @@ export function articleSearch(params?: any) {
 export function developmentHistory(params?: any) {
   return Http.Get<any>('/article/developmentHistory', { params })
 }
+
+/**
+ * 查看企业文化文章
+ * @param alias 集团公司（jituangongsi）四川公司（sichuanggongsi）泸定公司（ludinggongsi）
+ */
+export function corporateCulture(params: { alias: string }) {
+  return Http.Get<any>('/article/corporateCulture', { params })
+}

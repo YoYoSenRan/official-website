@@ -123,7 +123,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style  lang="scss">
 // 最外层容器
 .view-container {
   width: 100%;
@@ -246,8 +246,9 @@ onMounted(() => {
       line-height: 1.8;
 
       p {
-        margin: 0 0 20px 0;
+        margin: 20px 0;
         text-align: justify;
+        text-indent: 4em;
       }
     }
   }

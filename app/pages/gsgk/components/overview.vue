@@ -1,17 +1,23 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useAnchorNavigation } from '~/composables/useAnchorNavigation'
 import image1 from '~/assets/images/swiper/swiper-1.jpg'
 import image2 from '~/assets/images/swiper/swiper-2.jpg'
 import image3 from '~/assets/images/swiper/swiper-3.jpg'
 import overviewBg from '~/assets/images/overview-top-bg.webp'
-
+import Tabs from './gsjj/gstabs.vue'
 // 数据定义
 interface OverviewItem {
   title: string
   description: string
   image: string
 }
+const { activeAnchor, scrollToAnchor } = useAnchorNavigation()
+const anchors = [
+  { id: 'gsjj', title: '泸定公司' },
+  { id: 'ldbz', title: '其他公司' },
 
+]
 const overviewItems: OverviewItem[] = [
   {
     title: '地理位置',
@@ -40,7 +46,9 @@ function setCurrentIndex(index: number) {
   currentIndex.value = index
   resetAutoPlay()
 }
-
+/** 处理 Tab 切换 */
+function onTabChange(slug: string) {
+}
 /**
  * 自动轮播逻辑
  */
@@ -91,6 +99,7 @@ onUnmounted(() => {
               <h2 class="overview__title">
                 公司介绍
               </h2>
+
               <p class="overview__description">
                 四川华电泸定水电有限公司（以下简称公司）于2006年6月注册成立，由华电国际电力股份有限公司全资设立，负责泸定水电站的投资、建设和运营。
               </p>

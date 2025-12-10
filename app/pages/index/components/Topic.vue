@@ -74,9 +74,13 @@ onMounted(() => {
           class="index-topic__swiper"
         >
           <SwiperSlide v-for="item in topicList" :key="item.id">
+            <NuxtLink :to="item.description" >
+            <!-- {{ item.title }} -->
+          
             <div class="index-topic__slide">
               <img :src="item.image" :alt="item.name || 'topic-item'">
             </div>
+            </NuxtLink>
           </SwiperSlide>
         </Swiper>
       </div>

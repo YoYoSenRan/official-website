@@ -41,6 +41,13 @@ async function fetchTopicData() {
   }
 }
 
+/**
+ * 跳转到专题聚焦列表页
+ */
+function navigateToTopic(id: string) {
+  navigateTo(`/ztjj?articleId=${id}`)
+}
+
 onMounted(() => {
   fetchTopicData()
 })
@@ -73,7 +80,7 @@ onMounted(() => {
           :autoplay="autoplayOptions"
           class="index-topic__swiper"
         >
-          <SwiperSlide v-for="item in topicList" :key="item.id">
+          <SwiperSlide v-for="item in topicList" :key="item.id" @click="navigateToTopic(item.articleId)">
             <div class="index-topic__slide">
               <img :src="item.image" :alt="item.name || 'topic-item'">
             </div>

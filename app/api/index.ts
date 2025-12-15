@@ -71,3 +71,12 @@ export function developmentHistory(params?: any) {
 export function corporateCulture(params: { alias: string }) {
   return Http.Get<any>('/article/corporateCulture', { params })
 }
+
+/**
+ * 根据文章ID获取二级菜单列表
+ * @param articleId - 文章ID
+ * @returns 二级菜单列表
+ */
+export function secendMenuById(params: { articleId: string }) {
+  return Http.Get<any>('/article/secendMenuById', { params })
+}

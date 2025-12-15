@@ -1,9 +1,36 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { companyProfile } from '~/api/index'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import image1 from '~/assets/images/swiper/swiper-1.jpg'
 import image2 from '~/assets/images/swiper/swiper-2.jpg'
 import image3 from '~/assets/images/swiper/swiper-3.jpg'
 import overviewBg from '~/assets/images/overview-top-bg.webp'
+
+// 接口数据 - 数组形式
+const profileList = ref<any[]>([])
+const activeTab = ref(0)
+const isLoading = ref(false)
+
+// 当前显示的数据项
+const currentProfile = computed(() => profileList.value[activeTab.value] || {})
+
+/**
+ * 获取公司简介数据
+ */
+async function fetchCompanyProfile() {
+  try {
+    isLoading.value = true
+    const response = await companyProfile({ alias: 'gongsijianjie' })
+    // 确保是数组
+    profileList.value = Array.isArray(response) ? response : [response]
+  }
+  catch (error) {
+    console.error('获取公司简介数据失败:', error)
+  }
+  finally {
+    isLoading.value = false
+  }
+}
 
 // 数据定义
 interface OverviewItem {
@@ -62,6 +89,7 @@ function resetAutoPlay() {
 
 onMounted(() => {
   startAutoPlay()
+  fetchCompanyProfile()
 })
 
 onUnmounted(() => {
@@ -81,26 +109,36 @@ onUnmounted(() => {
         <div class="overview__wrapper">
           <!-- 左侧图片 -->
           <div class="overview__image">
-            <img src="@/assets/images/swiper/swiper-1.jpg" alt="公司介绍">
+            <img :src="currentProfile?.imageUrl" alt="公司介绍">
           </div>
 
           <!-- 右侧内容 -->
           <div class="overview__content">
+            <!-- Tabs 切换 -->
+            <div v-if="profileList.length > 1" class="overview__tabs">
+              <button
+                v-for="(item, index) in profileList"
+                :key="index"
+                class="overview__tab"
+                :class="{ 'overview__tab--active': activeTab === index }"
+                @click="activeTab = index"
+              >
+                {{ item.title }}
+              </button>
+            </div>
             <!-- 标题和描述 -->
             <div class="overview__text">
               <h2 class="overview__title">
-                公司介绍
+                {{ currentProfile?.title || '公司介绍' }}
               </h2>
-              <p class="overview__description">
-                四川华电泸定水电有限公司（以下简称公司）于2006年6月注册成立，由华电国际电力股份有限公司全资设立，负责泸定水电站的投资、建设和运营。
-              </p>
+              <div class="overview__description" v-html="currentProfile?.description || ''" />
             </div>
 
             <!-- 数据指标 -->
             <div class="overview__metrics">
               <div class="overview__metric">
                 <div class="overview__metric-value">
-                  920
+                  {{ currentProfile?.output1 || '-' }}
                 </div>
                 <div class="overview__metric-label">
                   MW总装机容量
@@ -108,7 +146,7 @@ onUnmounted(() => {
               </div>
               <div class="overview__metric">
                 <div class="overview__metric-value">
-                  37.8
+                  {{ currentProfile?.output2 || '-' }}
                 </div>
                 <div class="overview__metric-label">
                   亿KW.h年发电量
@@ -116,7 +154,7 @@ onUnmounted(() => {
               </div>
               <div class="overview__metric">
                 <div class="overview__metric-value">
-                  2012
+                  {{ currentProfile?.output3 || '-' }}
                 </div>
                 <div class="overview__metric-label">
                   年全面投产
@@ -237,6 +275,40 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+  }
+
+  /* Tabs 切换样式 */
+  &__tabs {
+    gap: 12px;
+    display: flex;
+    margin-bottom: 20px;
+  }
+
+  &__tab {
+    color: #666;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    padding: 8px 24px;
+    font-size: 14px;
+    background: #fff;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    border-radius: 20px;
+
+    &:hover {
+      color: $primary-color;
+      border-color: $primary-color;
+    }
+
+    &--active {
+      color: #fff;
+      background: $primary-color;
+      border-color: $primary-color;
+
+      &:hover {
+        color: #fff;
+      }
+    }
   }
 
   /* 文字区域 */

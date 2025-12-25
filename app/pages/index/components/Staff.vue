@@ -3,7 +3,7 @@ import { blockItem } from '~/api'
 import { buildFullUrl } from '~/utils/utils'
 import { ref, onMounted } from 'vue'
 
-const items = ref<string[]>([])
+const items = ref<any[]>([])
 const isHovered = ref(false)
 
 /**
@@ -21,13 +21,20 @@ function resumeRotation() {
 }
 
 /**
+ * 跳转到新闻详情页
+ */
+function navigateToDetail(id: string) {
+  navigateTo(`/news/detail/${id}`)
+}
+
+/**
  * 获取职工风采数据
  */
 async function fetchStaffData() {
   try {
     const response = await blockItem({ block: 'zhigongfengcai' })
-    // 处理返回的数据，提取图片URL并进行完整URL拼接
-    items.value = (response || []).map((item: any) => buildFullUrl(item.image))
+    // 处理返回的数据，保存id和图片URL
+    items.value = response
   }
   catch (error) {
     console.error('Failed to fetch staff data:', error)
@@ -60,8 +67,8 @@ onMounted(() => {
         <div class="index-staff__carousel-container">
           <div class="index-staff__carousel-3d">
             <div class="index-staff__carousel" :class="{ 'index-staff__carousel--paused': isHovered }" @mouseenter="pauseRotation" @mouseleave="resumeRotation">
-              <figure v-for="(item, index) in items" :key="index" class="index-staff__carousel-item">
-                <img class="index-staff__carousel-img" :src="item" alt="">
+              <figure v-for="(item, index) in items" :key="index" class="index-staff__carousel-item" @click="navigateToDetail(item.articleId)">
+                <img class="index-staff__carousel-img" :src="item.image" alt="">
               </figure>
             </div>
           </div>

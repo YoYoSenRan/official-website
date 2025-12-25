@@ -6,6 +6,13 @@ import historyBg from '~/assets/images/history-bg.webp'
 
 const year = ref('2024')
 const isLoading = ref(false)
+
+// 电站选项配置
+const stationTabs = [
+  { label: '泸定水电站', value: 'ludingshuidianzhan' },
+  { label: '德察光伏电站', value: 'dechaguangfudianzhan' },
+]
+const activeStation = ref('ludingshuidianzhan')
 const allData = ref<any[]>([])
 const timelineRef = ref<HTMLElement | null>(null)
 const detailsRef = ref<HTMLElement | null>(null)
@@ -104,7 +111,7 @@ async function fetchHistoryData() {
     isLoading.value = true
     // 调用 articlePageListByAlias 接口获取发展历程数据
     const response = await developmentHistory({
-      alias: 'fazhanlicheng',
+      alias: activeStation.value,
     })
     allData.value = normalizeHistoryData(response)
     // 如果有数据，自动设置为最新的年份
@@ -324,6 +331,16 @@ watch(
   },
 )
 
+// 监听电站切换，重新获取数据
+watch(
+  () => activeStation.value,
+  () => {
+    allData.value = []
+    year.value = ''
+    fetchHistoryData()
+  },
+)
+
 // 初始化 - 获取所有数据
 fetchHistoryData()
 
@@ -349,6 +366,17 @@ onBeforeUnmount(() => {
         <h2 class="history__title">
           发展历程
         </h2>
+      </div>
+      <div class="history__tabs">
+        <button
+          v-for="tab in stationTabs"
+          :key="tab.value"
+          class="history__tab"
+          :class="{ 'history__tab--active': activeStation === tab.value }"
+          @click="activeStation = tab.value"
+        >
+          {{ tab.label }}
+        </button>
       </div>
     </div>
     <div class="history__content">
@@ -454,9 +482,43 @@ onBeforeUnmount(() => {
 
   /* ============ 头部样式 ============ */
   &__header {
+    gap: 20px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+  }
+
+  &__tabs {
+    gap: 8px;
+    display: flex;
+    align-items: center;
+  }
+
+  &__tab {
+    color: #666;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    padding: 8px 20px;
+    font-size: 14px;
+    background: #fff;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    border-radius: 20px;
+
+    &:hover {
+      color: $primary-color;
+      border-color: $primary-color;
+    }
+
+    &--active {
+      color: #fff;
+      background: $primary-color;
+      border-color: $primary-color;
+
+      &:hover {
+        color: #fff;
+      }
+    }
   }
 
   &__title-wrapper {

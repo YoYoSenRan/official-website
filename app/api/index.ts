@@ -1,5 +1,36 @@
 import { Http } from '~/utils/http'
 
+// ==================== 认证相关接口 ====================
+
+/**
+ * 登录接口响应类型
+ */
+export interface LoginResponse {
+  status: number
+  result: {
+    accessToken: string
+    refreshToken: string
+    expiresIn: number
+    refreshExpiresIn: number
+    refreshAuthExpiresIn: string
+    sessionTimeout: number
+    remembered: boolean
+  }
+  message: string | null
+  exception: string | null
+}
+
+/**
+ * 登录接口
+ * @param data 登录参数（用户名和加密后的密码）
+ * @returns 登录响应，包含 Token 信息
+ */
+export function login(data: { username: string; password: string }) {
+  return Http.Post<LoginResponse>('/auth/jwt/login', data)
+}
+
+// ==================== 文章相关接口 ====================
+
 /**
  * 首页轮播图文章列表
  * @returns 轮播图数据列表

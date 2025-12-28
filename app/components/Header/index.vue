@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useMenuStore } from '~/store/menu'
 import { articleSearch, headerArticlePageList } from '~/api'
-import logo from '~/assets/images/logo.png'
+
 import News from '~/components/News/index.vue'
 import dayjs from 'dayjs'
 
@@ -259,9 +259,7 @@ function handleLogin() {
 <template>
   <div class="header">
     <div class="header__content">
-      <div class="header__logo">
-        <img class="logo" :src="logo" alt="logo" @click="goHome">
-      </div>
+
       <div class="header__menu">
         <div v-for="item in menu" :key="item.title" class="header__menu__item">
           <NuxtLink :to="item.route" class="link">
@@ -403,16 +401,7 @@ function handleLogin() {
     align-items: center;
     background-color: #fff;
   }
-  &__logo {
-    overflow: hidden;
-    margin-left: 160px;
-    margin-right: 60px;
-    .logo {
-      cursor: pointer;
-      height: 50px;
-      object-fit: cover;
-    }
-  }
+
   &__menu {
     flex: 1;
     height: 100%;

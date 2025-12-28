@@ -231,14 +231,14 @@ onBeforeUnmount(() => {
               <div class="generate__metric">
                 <div class="generate__metric-value">
                   <span class="generate__metric-number">
-                    {{ parsedMetrics.yearTotal.value }}
+                    {{ parsedMetrics.dayTotal.value }}
                   </span>
                   <span class="generate__metric-unit">
-                    {{ parsedMetrics.yearTotal.unit }}
+                    {{ parsedMetrics.dayTotal.unit }}
                   </span>
                 </div>
                 <div class="generate__metric-sub">
-                  年累
+                  日累
                 </div>
               </div>
               <div class="generate__metric">
@@ -257,14 +257,14 @@ onBeforeUnmount(() => {
               <div class="generate__metric">
                 <div class="generate__metric-value">
                   <span class="generate__metric-number">
-                    {{ parsedMetrics.dayTotal.value }}
+                    {{ parsedMetrics.yearTotal.value }}
                   </span>
                   <span class="generate__metric-unit">
-                    {{ parsedMetrics.dayTotal.unit }}
+                    {{ parsedMetrics.yearTotal.unit }}
                   </span>
                 </div>
                 <div class="generate__metric-sub">
-                  日累
+                  年累
                 </div>
               </div>
             </div>

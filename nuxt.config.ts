@@ -27,7 +27,8 @@ export default defineNuxtConfig({
   // 配置不同环境的API地址
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://2444450wnth3.vicp.fun',
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://182.254.180.136:8080',
+      // apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://2444450wnth3.vicp.fun',
     },
   },
   ui: {
@@ -79,7 +80,7 @@ export default defineNuxtConfig({
     // 开发环境代理配置
     devProxy: {
       '/api': {
-        target: 'http://2444450wnth3.vicp.fun/api',
+        target: 'http://182.254.180.136:8080',
         changeOrigin: true,
         prependPath: true,
       },
@@ -87,10 +88,11 @@ export default defineNuxtConfig({
     // 生产环境代理配置 - 解决部署后的CORS问题
     routeRules: {
       '/api/**': {
-        proxy: 'http://2444450wnth3.vicp.fun/api/**',
+        proxy: 'http://182.254.180.136:8080',
+        // proxy: 'http://2444450wnth3.vicp.fun/api/**',
       },
       '/uploads/**': {
-        proxy: 'http://2444450wnth3.vicp.fun/api/**',
+        proxy: 'http://182.254.180.136:8080',
       },
       // 动态路由设置为 SSR 模式（不预渲染，而是动态渲染）
       '/news/detail/**': {

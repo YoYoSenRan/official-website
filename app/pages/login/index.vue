@@ -198,7 +198,7 @@ async function handleLogin() {
 }
 
 .error-message {
-  color: $error-color;
+  color: #ef4444;
   padding: 12px 16px;
   font-size: 14px;
   border-radius: 8px;

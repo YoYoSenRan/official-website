@@ -78,48 +78,51 @@ async function handleLogin() {
       <!-- 登录表单 -->
       <form class="login-form" @submit.prevent="handleLogin">
         <!-- 用户名 -->
-        <UFormField label="用户名" name="username" class="w-full">
-          <UInput
-            v-model="form.username"
-            placeholder="请输入用户名"
-            icon="i-lucide-user"
-            size="lg"
-            class="w-full"
-            :disabled="isLoading"
-          />
-        </UFormField>
+        <div class="form-field">
+          <label for="username" class="form-label">用户名</label>
+          <div class="input-wrapper">
+            <input
+              id="username"
+              v-model="form.username"
+              type="text"
+              placeholder="请输入用户名"
+              class="form-input"
+              :disabled="isLoading"
+            >
+          </div>
+        </div>
 
         <!-- 密码 -->
-        <UFormField label="密码" name="password" class="w-full">
-          <UInput
-            v-model="form.password"
-            type="password"
-            placeholder="请输入密码"
-            icon="i-lucide-lock"
-            size="lg"
-            class="w-full"
-            :disabled="isLoading"
-          />
-        </UFormField>
+        <div class="form-field">
+          <label for="password" class="form-label">密码</label>
+          <div class="input-wrapper">
+            <input
+              id="password"
+              v-model="form.password"
+              type="password"
+              placeholder="请输入密码"
+              class="form-input"
+              :disabled="isLoading"
+            >
+          </div>
+        </div>
 
         <!-- 错误信息 -->
-        <Transition name="fade">
+        <transition name="fade">
           <div v-if="errorMessage" class="error-message">
             {{ errorMessage }}
           </div>
-        </Transition>
+        </transition>
 
         <!-- 登录按钮 -->
-        <UButton
+        <button
           type="submit"
-          color="primary"
-          size="lg"
-          block
-          :loading="isLoading"
           class="login-button"
+          :disabled="isLoading"
+          :class="{ 'is-loading': isLoading }"
         >
           {{ isLoading ? '登录中...' : '登录' }}
-        </UButton>
+        </button>
       </form>
     </div>
   </div>
@@ -133,6 +136,7 @@ async function handleLogin() {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   align-items: center;
   justify-content: center;
+  position: relative;
 
   // 背景装饰
   &::before {
@@ -177,39 +181,124 @@ async function handleLogin() {
 }
 
 .login-form {
-  gap: 20px;
   display: flex;
   flex-direction: column;
+  gap: 20px;
+}
 
-  :deep(.field) {
-    width: 100%;
+// 表单字段
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 
-    .label {
-      color: #374151;
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 6px;
-    }
-  }
-
-  :deep(input) {
-    width: 100%;
+  .form-label {
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
   }
 }
 
+// 输入框包装器
+.input-wrapper {
+  position: relative;
+}
+
+// 输入框样式
+.form-input {
+  width: 100%;
+  height: 48px;
+  padding: 12px 16px;
+  font-size: 15px;
+  color: #1f2937;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: all 0.2s ease;
+  outline: none;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+
+  &:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  &:disabled {
+    background-color: #f9fafb;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+// 错误信息
 .error-message {
   color: #ef4444;
   padding: 12px 16px;
   font-size: 14px;
   border-radius: 8px;
   background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
+// 登录按钮
 .login-button {
+  width: 100%;
   height: 48px;
   font-size: 16px;
-  margin-top: 8px;
   font-weight: 600;
+  margin-top: 8px;
+  color: #fff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  &.is-loading {
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      width: 16px;
+      height: 16px;
+      margin-top: -8px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+  }
+}
+
+// 旋转动画
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 // 过渡动画

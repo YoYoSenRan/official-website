@@ -12,7 +12,6 @@
 .layouts-container {
   height: 100vh;
   display: flex;
-  overflow: hidden;
   flex-direction: column;
   background-color: #fff;
 }

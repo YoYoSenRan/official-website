@@ -7,7 +7,7 @@
  * - 仅在客户端可用，SSR 时需做兼容处理
  */
 import { defineStore } from 'pinia'
-import { login as loginApi } from '~/api'
+import { clientPublicKey, login as loginApi } from '~/api'
 import { sm2Encrypt } from '~/utils/crypto'
 
 // 登录有效期：2 小时（毫秒）
@@ -96,8 +96,12 @@ export const useAuthStore = defineStore('auth', {
      */
     async login(username: string, password: string): Promise<boolean> {
       try {
-        // 使用 SM2 加密密码（公钥已在 crypto.ts 中配置）
-        const encryptedPassword = sm2Encrypt(password)
+        // 获取服务端公钥
+        const publicKeyResponse = await clientPublicKey()
+        const publicKey = publicKeyResponse?.result || publicKeyResponse
+
+        // 使用 SM2 加密密码（使用服务端返回的公钥）
+        const encryptedPassword = sm2Encrypt(password, publicKey)
 
         // 调用登录接口
         const response = await loginApi({

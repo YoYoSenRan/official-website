@@ -120,3 +120,8 @@ export function secendMenuById(params: { articleId: string }) {
 export function companyProfile(params: { alias: string }) {
   return Http.Get<any>('/article/companyProfile', { params })
 }
+
+
+export function clientPublicKey() {
+  return Http.Get<any>('/env/client-public-key')
+}

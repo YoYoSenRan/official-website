@@ -100,8 +100,12 @@ export const useAuthStore = defineStore('auth', {
         const publicKeyResponse = await clientPublicKey()
         const publicKey = publicKeyResponse?.result || publicKeyResponse
 
+        console.log('🔑 [Login] 获取到公钥:', publicKey?.substring(0, 50) + '...')
+
         // 使用 SM2 加密密码（使用服务端返回的公钥）
         const encryptedPassword = sm2Encrypt(password, publicKey)
+
+        console.log('🔐 [Login] 密码已加密:', encryptedPassword?.substring(0, 50) + '...')
 
         // 调用登录接口
         const response = await loginApi({
@@ -109,9 +113,23 @@ export const useAuthStore = defineStore('auth', {
           password: encryptedPassword,
         })
 
+        console.log('📡 [Login] API 完整响应:', JSON.stringify(response, null, 2))
+        console.log('📡 [Login] response.status:', response.status)
+        console.log('📡 [Login] response.result:', response.result)
+        console.log('📡 [Login] response.result 类型:', typeof response.result)
+
         // 判断登录是否成功
         if (response.status === 0 && response.result) {
+          console.log('✅ [Login] 登录成功，开始提取 token')
+          
           const { accessToken, refreshToken } = response.result
+
+          console.log('🎫 [Login] 提取到的 tokens:', {
+            accessToken: accessToken?.substring(0, 50) + '...' || accessToken,
+            refreshToken: refreshToken?.substring(0, 50) + '...' || refreshToken,
+            accessTokenType: typeof accessToken,
+            refreshTokenType: typeof refreshToken,
+          })
 
           // 保存 Token 到状态
           this.accessToken = accessToken
@@ -124,6 +142,8 @@ export const useAuthStore = defineStore('auth', {
             nickname: username,
           }
 
+          console.log('💾 [Login] 开始保存到 sessionStorage')
+
           // 使用 sessionStorage 持久化 Token
           setStorageItem(STORAGE_KEYS.ACCESS_TOKEN, accessToken)
           setStorageItem(STORAGE_KEYS.REFRESH_TOKEN, refreshToken)
@@ -133,14 +153,21 @@ export const useAuthStore = defineStore('auth', {
           const expiresAt = Date.now() + LOGIN_EXPIRES_IN
           setStorageItem(STORAGE_KEYS.EXPIRES_AT, String(expiresAt))
 
+          console.log('✅ [Login] 保存完成，验证 sessionStorage:', {
+            savedAccessToken: sessionStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)?.substring(0, 50) + '...',
+            savedRefreshToken: sessionStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN)?.substring(0, 50) + '...',
+            savedUserInfo: sessionStorage.getItem(STORAGE_KEYS.USER_INFO),
+            savedExpiresAt: sessionStorage.getItem(STORAGE_KEYS.EXPIRES_AT),
+          })
+
           return true
         }
 
-        console.error('登录失败:', response.message)
+        console.error('❌ [Login] 登录失败:', response.message)
         return false
       }
       catch (error) {
-        console.error('登录请求错误:', error)
+        console.error('❌ [Login] 登录请求错误:', error)
         return false
       }
     },
@@ -169,24 +196,39 @@ export const useAuthStore = defineStore('auth', {
       const storedUser = getStorageItem(STORAGE_KEYS.USER_INFO)
       const expiresAt = getStorageItem(STORAGE_KEYS.EXPIRES_AT)
 
+      console.log('🔄 [checkAuth] 开始检查', {
+        hasStoredToken: !!storedToken,
+        hasStoredUser: !!storedUser,
+        expiresAt,
+        currentTime: Date.now(),
+        isExpired: expiresAt ? Date.now() > Number(expiresAt) : 'N/A',
+      })
+
       // 检查是否过期
       if (expiresAt && Date.now() > Number(expiresAt)) {
         // 登录已过期，清除所有认证信息
+        console.warn('⏰ [checkAuth] 登录已过期，清除认证信息')
         this.logout()
         return
       }
 
-      if (storedToken && !this.user) {
-        // Token 存在但用户信息丢失，尝试恢复
+      // 如果 sessionStorage 中有 token，无条件恢复状态
+      if (storedToken) {
+        console.log('✅ [checkAuth] 发现有效 token，恢复状态')
+        
+        // 恢复 token
         this.accessToken = storedToken
         this.refreshToken = getStorageItem(STORAGE_KEYS.REFRESH_TOKEN)
 
+        // 恢复用户信息
         if (storedUser) {
           try {
             this.user = JSON.parse(storedUser)
+            console.log('✅ [checkAuth] 成功恢复用户信息', this.user)
           }
-          catch {
+          catch (error) {
             // JSON 解析失败，使用默认值
+            console.error('❌ [checkAuth] 解析用户信息失败', error)
             this.user = {
               id: 'restored',
               username: 'user',
@@ -195,12 +237,16 @@ export const useAuthStore = defineStore('auth', {
           }
         }
         else {
+          console.warn('⚠️ [checkAuth] 未找到用户信息，使用默认值')
           this.user = {
             id: 'restored',
             username: 'user',
             nickname: 'user',
           }
         }
+      }
+      else {
+        console.log('❌ [checkAuth] 未找到 token，保持未登录状态')
       }
     },
   },

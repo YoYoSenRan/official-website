@@ -386,6 +386,7 @@ function handleLogin() {
   height: 80px;
   display: flex;
   z-index: 1001;
+  flex-shrink: 0;
   position: relative;
   align-items: center;
   justify-content: center;

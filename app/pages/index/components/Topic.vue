@@ -84,7 +84,6 @@ onMounted(() => {
             <div class="index-topic__slide">
               <img :src="item.image" :alt="item.name || 'topic-item'">
             </div>
-            </NuxtLink>
           </SwiperSlide>
         </Swiper>
       </div>

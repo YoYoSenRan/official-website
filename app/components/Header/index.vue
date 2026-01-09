@@ -247,11 +247,21 @@ function goHome() {
   navigateTo('/')
 }
 
-/** 登录/注册跳转 */
+/** 登录/注册跳转 - 新开页面 */
 function handleLogin() {
   if (import.meta.client) {
-    const { protocol, hostname } = window.location
-    window.location.href = `${protocol}//${hostname}:9055/admin`
+    // 使用 URL 构造函数，更健壮的方式构建目标地址
+    const adminUrl = new URL('/admin', window.location.origin)
+    adminUrl.port = '9055'
+
+    // 创建 a 标签实现新页面打开
+    const link = document.createElement('a')
+    link.href = adminUrl.href
+    console.log(adminUrl);
+    console.log(link.href);
+    link.target = '_blank'
+    link.rel = 'noopener noreferrer' // 安全性考虑
+    link.click()
   }
 }
 </script>

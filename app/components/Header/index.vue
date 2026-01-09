@@ -251,7 +251,7 @@ function goHome() {
 function handleLogin() {
   if (import.meta.client) {
     const { protocol, hostname } = window.location
-    window.location.href = `${protocol}//${hostname}/admin`
+    window.location.href = `${protocol}//${hostname}:9055/admin`
   }
 }
 </script>
